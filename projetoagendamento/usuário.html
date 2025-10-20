@@ -1,0 +1,222 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Senac Agendamentos - Sistema de Reserva de Salas</title>
+    <meta name="description" content="Sistema de agendamento de salas e laboratórios do Senac. Reserve espaços de forma rápida e fácil.">
+    
+    <!-- CSS Externo -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-content">
+                <div class="navbar-logo">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span class="navbar-title">Senac Agendamentos</span>
+                </div>
+                <div class="navbar-menu">
+                    <a href="#" class="navbar-link">Início</a>
+                    <a href="#salas" class="navbar-link">Salas</a>
+                    <button class="btn-primary">Fazer Login</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-background hero-gradient"></div>
+        
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Sistema de Agendamento de Salas
+                </h1>
+                <p class="hero-subtitle">
+                    Reserve salas de aula e laboratórios do Senac de forma simples e rápida
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn-hero-primary">Fazer Login</button>
+                    <button class="btn-hero-secondary">Cadastrar-se</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="features-container">
+            <div class="features-grid">
+                <!-- Feature 1 -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Agendamento Fácil</h3>
+                    <p class="feature-description">
+                        Visualize a disponibilidade e reserve salas em poucos cliques
+                    </p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Tempo Real</h3>
+                    <p class="feature-description">
+                        Acompanhe o status das salas em tempo real
+                    </p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Gestão Segura</h3>
+                    <p class="feature-description">
+                        Sistema com diferentes níveis de permissão e aprovação
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rooms Preview Section -->
+    <section id="salas" class="rooms-section">
+        <div class="rooms-container">
+            <div class="section-header">
+                <h2 class="section-title">Salas Disponíveis</h2>
+                <p class="section-subtitle">
+                    Confira algumas de nossas salas e laboratórios
+                </p>
+            </div>
+
+            <div class="rooms-grid">
+                <!-- Room Card 1 -->
+                <div class="room-card available">
+                    <div class="room-card-header">
+                        <div>
+                            <h3 class="room-title">Sala 101</h3>
+                            <p class="room-type">
+                                <svg fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                                </svg>
+                                Sala de Aula
+                            </p>
+                        </div>
+                        <span class="badge badge-available">Disponível</span>
+                    </div>
+                    <div class="room-card-content">
+                        <div class="room-info">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            <span>Capacidade: 30 pessoas</span>
+                        </div>
+                        <div class="room-resources">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            <div class="resources-list">
+                                <span class="resource-tag">Projetor</span>
+                                <span class="resource-tag">Quadro</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Room Card 2 -->
+                <div class="room-card available">
+                    <div class="room-card-header">
+                        <div>
+                            <h3 class="room-title">Lab 201</h3>
+                            <p class="room-type">
+                                <svg fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                                </svg>
+                                Laboratório
+                            </p>
+                        </div>
+                        <span class="badge badge-available">Disponível</span>
+                    </div>
+                    <div class="room-card-content">
+                        <div class="room-info">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            <span>Capacidade: 25 pessoas</span>
+                        </div>
+                        <div class="room-resources">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            <div class="resources-list">
+                                <span class="resource-tag">Computadores</span>
+                                <span class="resource-tag">Ar Condicionado</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Room Card 3 -->
+                <div class="room-card occupied">
+                    <div class="room-card-header">
+                        <div>
+                            <h3 class="room-title">Sala 305</h3>
+                            <p class="room-type">
+                                <svg fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                                </svg>
+                                Auditório
+                            </p>
+                        </div>
+                        <span class="badge badge-occupied">Ocupada</span>
+                    </div>
+                    <div class="room-card-content">
+                        <div class="room-info">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            <span>Capacidade: 100 pessoas</span>
+                        </div>
+                        <div class="room-resources">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            <div class="resources-list">
+                                <span class="resource-tag">Som</span>
+                                <span class="resource-tag">Palco</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <button class="btn-cta">Fazer Login para Reservar</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2025 Senac - Sistema de Agendamento de Salas. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
