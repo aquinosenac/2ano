@@ -2,22 +2,40 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Senac Agendamentos</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
   <script src="firebase-config.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h2>Login</h2>
-    <form id="loginForm">
-      <input type="email" id="loginEmail" placeholder="Email" required>
-      <input type="password" id="loginSenha" placeholder="Senha" required>
-      <button type="submit">Entrar</button>
-    </form>
-    <p>Não tem uma conta? <a href="cadastro.html">Cadastre-se</a></p>
-  </div>
+  <!-- Header -->
+  <header>
+    <div class="logo">📅 Senac Agendamentos</div>
+    <nav>
+      <a href="/projetoagendamento/usuário.html">Início</a>
+      <a href="/projetoagendamento/salas-horarios.html">Salas</a>
+      <a href="cadastro.html" class="btn-login">Cadastrar</a>
+    </nav>
+  </header>
+
+  <!-- Main Section -->
+  <main>
+    <div class="cadastro-card">
+      <h2>Fazer Login</h2>
+      <p>Entre para acessar o sistema de agendamento de salas</p>
+
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <input type="password" id="loginSenha" placeholder="Senha" required>
+        <button type="submit">Entrar</button>
+      </form>
+
+      <p class="link-login">Não tem uma conta? <a href="cadastro.html">Cadastre-se</a></p>
+    </div>
+  </main>
+
   <script src="script.js"></script>
 </body>
 </html>

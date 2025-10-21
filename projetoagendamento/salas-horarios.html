@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade de Horários - RoomZen Senac</title>
+    <meta name="description" content="Visualize a disponibilidade de todas as salas em tempo real">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-content">
+                <a href="usuário.html" class="navbar-logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                        <path d="M9 3v18"/>
+                    </svg>
+                    <h1 class="navbar-title">Senac Agendamentos</h1>
+                </a>
+                <div class="navbar-menu">
+                    <a href="usuário.html" class="navbar-link">Início</a>
+                    <a href="salas-horarios.html" class="navbar-link">Grade de Horários</a>
+                    <a href="login-cadastro/login.html"><button class="btn-primary">Login</button></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Schedule Grid Section -->
+    <main class="schedule-section">
+        <div class="schedule-container">
+            <div class="section-header">
+                <h2 class="section-title">Grade de Horários</h2>
+                <p class="section-subtitle">Visualize a disponibilidade de todas as salas</p>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <span class="legend-color available"></span>
+                    <span>Disponível</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color occupied"></span>
+                    <span>Ocupado</span>
+                </div>
+            </div>
+
+            <!-- Schedule Grid -->
+            <div class="schedule-grid-wrapper">
+                <div class="schedule-grid">
+                    <!-- Header Row -->
+                    <div class="grid-header">
+                        <div class="grid-cell header-cell sticky-col">Sala</div>
+                        <div class="grid-cell header-cell">07:00</div>
+                        <div class="grid-cell header-cell">08:00</div>
+                        <div class="grid-cell header-cell">09:00</div>
+                        <div class="grid-cell header-cell">10:00</div>
+                        <div class="grid-cell header-cell">11:00</div>
+                        <div class="grid-cell header-cell">12:00</div>
+                        <div class="grid-cell header-cell">13:00</div>
+                        <div class="grid-cell header-cell">14:00</div>
+                        <div class="grid-cell header-cell">15:00</div>
+                        <div class="grid-cell header-cell">16:00</div>
+                        <div class="grid-cell header-cell">17:00</div>
+                        <div class="grid-cell header-cell">18:00</div>
+                        <div class="grid-cell header-cell">19:00</div>
+                        <div class="grid-cell header-cell">20:00</div>
+                        <div class="grid-cell header-cell">21:00</div>
+                        <div class="grid-cell header-cell">22:00</div>
+                    </div>
+
+                    <!-- Sala 101 - Lab de Informática -->
+                    <div class="grid-row">
+                        <div class="grid-cell room-cell sticky-col">
+                            <div class="room-name">Sala 101</div>
+                            <div class="room-subtitle">Lab de Informática 1</div>
+                        </div>
+                        <div class="grid-cell time-slot available" title="Disponível - 07:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 08:00">Aula TI</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 09:00">Aula TI</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 10:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 11:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 12:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 13:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 14:00">Workshop</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 15:00">Workshop</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 16:00">Workshop</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 17:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 18:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 19:00">Curso</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 20:00">Curso</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 21:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 22:00"></div>
+                    </div>
+
+                    <!-- Sala 102 - Auditório Principal -->
+                    <div class="grid-row">
+                        <div class="grid-cell room-cell sticky-col">
+                            <div class="room-name">Sala 102</div>
+                            <div class="room-subtitle">Lab de Informática 2</div>
+                        </div>
+                        <div class="grid-cell time-slot available" title="Disponível - 07:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 08:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 09:00">Palestra</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 10:00">Palestra</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 11:00">Palestra</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 12:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 13:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 14:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 15:00">Evento</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 16:00">Evento</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 17:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 18:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 19:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 20:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 21:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 22:00"></div>
+                    </div>
+
+                    <!-- Sala 201 - Sala de Reuniões -->
+                    <div class="grid-row">
+                        <div class="grid-cell room-cell sticky-col">
+                            <div class="room-name">Sala 103</div>
+                            <div class="room-subtitle">Auditório 1</div>
+                        </div>
+                        <div class="grid-cell time-slot available" title="Disponível - 07:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 08:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 09:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 10:00">Reunião</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 11:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 12:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 13:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 14:00">Reunião</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 15:00">Reunião</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 16:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 17:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 18:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 19:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 20:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 21:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 22:00"></div>
+                    </div>
+
+                    <!-- Sala 202 - Studio de Design -->
+                    <div class="grid-row">
+                        <div class="grid-cell room-cell sticky-col">
+                            <div class="room-name">Sala 104</div>
+                            <div class="room-subtitle">Auditório 2</div>
+                        </div>
+                        <div class="grid-cell time-slot available" title="Disponível - 07:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 08:00">Aula Design</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 09:00">Aula Design</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 10:00">Aula Design</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 11:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 12:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 13:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 14:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 15:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 16:00">Workshop</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 17:00">Workshop</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 18:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 19:00">Curso</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 20:00">Curso</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 21:00">Curso</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 22:00"></div>
+                    </div>
+
+                    <!-- Sala 301 - Biblioteca -->
+                    <div class="grid-row">
+                        <div class="grid-cell room-cell sticky-col">
+                            <div class="room-name">Sala 202</div>
+                            <div class="room-subtitle">Sala do 1º Ano</div>
+                        </div>
+                        <div class="grid-cell time-slot available" title="Disponível - 07:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 08:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 09:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 10:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 11:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 12:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 13:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 14:00">Estudo Grupo</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 15:00">Estudo Grupo</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 16:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 17:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 18:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 19:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 20:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 21:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 22:00"></div>
+                    </div>
+
+                    <!-- Sala 302 - Sala Multiuso -->
+                    <div class="grid-row">
+                        <div class="grid-cell room-cell sticky-col">
+                            <div class="room-name">Sala 203</div>
+                            <div class="room-subtitle">Sala do 3º Ano</div>
+                        </div>
+                        <div class="grid-cell time-slot available" title="Disponível - 07:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 08:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 09:00">Aula</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 10:00">Aula</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 11:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 12:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 13:00">Treinamento</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 14:00">Treinamento</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 15:00">Treinamento</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 16:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 17:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 18:00">Workshop</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 19:00">Workshop</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 20:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 21:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 22:00"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell room-cell sticky-col">
+                            <div class="room-name">Sala 204</div>
+                            <div class="room-subtitle">Sala do 2° Ano</div>
+                        </div>
+                        <div class="grid-cell time-slot available" title="Disponível - 07:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 08:00">Aula TI</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 09:00">Aula TI</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 10:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 11:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 12:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 13:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 14:00">Workshop</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 15:00">Workshop</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 16:00">Workshop</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 17:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 18:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 19:00">Curso</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 20:00">Curso</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 21:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 22:00"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell room-cell sticky-col">
+                            <div class="room-name">Sala 205</div>
+                            <div class="room-subtitle">Sala de Reuniões</div>
+                        </div>
+                        <div class="grid-cell time-slot available" title="Disponível - 07:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 08:00">Aula TI</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 09:00">Aula TI</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 10:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 11:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 12:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 13:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 14:00">Workshop</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 15:00">Workshop</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 16:00">Workshop</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 17:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 18:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 19:00">Curso</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 20:00">Curso</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 21:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 22:00"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell room-cell sticky-col">
+                            <div class="room-name">Sala 206</div>
+                            <div class="room-subtitle">Cozinha</div>
+                        </div>
+                        <div class="grid-cell time-slot available" title="Disponível - 07:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 08:00">Aula TI</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 09:00">Aula TI</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 10:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 11:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 12:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 13:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 14:00">Workshop</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 15:00">Workshop</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 16:00">Workshop</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 17:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 18:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 19:00">Curso</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 20:00">Curso</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 21:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 22:00"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell room-cell sticky-col">
+                            <div class="room-name">Sala 207</div>
+                            <div class="room-subtitle">Sala da Poli</div>
+                        </div>
+                        <div class="grid-cell time-slot available" title="Disponível - 07:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 08:00">Aula TI</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 09:00">Aula TI</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 10:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 11:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 12:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 13:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 14:00">Workshop</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 15:00">Workshop</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 16:00">Workshop</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 17:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 18:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 19:00">Curso</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 20:00">Curso</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 21:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 22:00"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell room-cell sticky-col">
+                            <div class="room-name">Sala 208</div>
+                            <div class="room-subtitle">Lab de Informática 3</div>
+                        </div>
+                        <div class="grid-cell time-slot available" title="Disponível - 07:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 08:00">Aula TI</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 09:00">Aula TI</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 10:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 11:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 12:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 13:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 14:00">Workshop</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 15:00">Workshop</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 16:00">Workshop</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 17:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 18:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 19:00">Curso</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 20:00">Curso</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 21:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 22:00"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell room-cell sticky-col">
+                            <div class="room-name">Sala 209</div>
+                            <div class="room-subtitle">Lab de Informática 4</div>
+                        </div>
+                        <div class="grid-cell time-slot available" title="Disponível - 07:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 08:00">Aula TI</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 09:00">Aula TI</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 10:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 11:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 12:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 13:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 14:00">Workshop</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 15:00">Workshop</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 16:00">Workshop</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 17:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 18:00"></div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 19:00">Curso</div>
+                        <div class="grid-cell time-slot occupied" title="Ocupado - 20:00">Curso</div>
+                        <div class="grid-cell time-slot available" title="Disponível - 21:00"></div>
+                        <div class="grid-cell time-slot available" title="Disponível - 22:00"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2025 Senac. Sistema de Gerenciamento de Salas.</p>
+        </div>
+    </footer>
+</body>
+</html>

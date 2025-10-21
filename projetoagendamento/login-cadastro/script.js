@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
       firebase.auth().createUserWithEmailAndPassword(email, senha)
         .then((userCredential) => {
           alert("Usuário cadastrado com sucesso!");
-          window.location.href = "index.html";
+          window.location.href = "/projetoagendamento/salas-horarios.html"; 
         })
         .catch((error) => {
           alert("Erro no cadastro: " + error.message);

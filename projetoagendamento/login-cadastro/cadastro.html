@@ -2,24 +2,40 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Cadastro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro - Senac Agendamentos</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
   <script src="firebase-config.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h2>Cadastro</h2>
-    <form id="cadastroForm">
-      <input type="text" id="nome" placeholder="Nome completo" required>
-      <input type="email" id="cadastroEmail" placeholder="Email" required>
-      <input type="password" id="cadastroSenha" placeholder="Senha" required>
-      <input type="password" id="confirmarSenha" placeholder="Confirmar senha" required>
-      <button type="submit">Cadastrar</button>
-    </form>
-    <p>Já tem uma conta? <a href="login.html">Faça login</a></p>
-  </div>
+  <header>
+    <div class="logo">📅 Senac Agendamentos</div>
+    <nav>
+      <a href="/projetoagendamento/usuário.html">Início</a>
+      <a href="/projetoagendamento/salas-horarios.html">Salas</a>
+      <a href="login.html" class="btn-login">Fazer Login</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="cadastro-card">
+      <h2>Crie sua conta</h2>
+      <p>Cadastre-se para começar a reservar salas e laboratórios.</p>
+
+      <form id="cadastroForm">
+        <input type="text" id="nome" placeholder="Nome completo" required>
+        <input type="email" id="cadastroEmail" placeholder="Email" required>
+        <input type="password" id="cadastroSenha" placeholder="Senha" required>
+        <input type="password" id="confirmarSenha" placeholder="Confirmar senha" required>
+        <button type="submit">Cadastrar</button>
+      </form>
+
+      <p class="link-login">Já tem uma conta? <a href="login.html">Faça login</a></p>
+    </div>
+  </main>
+
   <script src="script.js"></script>
 </body>
 </html>
