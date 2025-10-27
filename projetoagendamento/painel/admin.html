@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel do Administrador - Senac Agendamentos</title>
+  <link rel="stylesheet" href="/projetoagendamento/style.css">
+  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore-compat.js"></script>
+<script src="../firebase-config.js"></script>
+
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-content">
+        <div class="navbar-logo">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+          <span class="navbar-title">Painel do Administrador</span>
+        </div>
+        <div class="navbar-menu">
+          <a href="../usuário.html" class="navbar-link">Início</a>
+          <a href="../salas-horarios.html" class="navbar-link">Horários</a>
+          <button id="logoutBtn" class="btn-primary">Sair</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="schedule-section">
+    <div class="schedule-container">
+      <div class="section-header">
+        <h2 class="section-title">Gerenciar Usuários</h2>
+        <p class="section-subtitle">Visualize, edite cargos e remova usuários do sistema</p>
+      </div>
+
+      <!-- Tabela de usuários -->
+      <div class="users-table-container">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Cargo</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaUsuarios">
+            <!-- Linhas geradas via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <p>&copy; 2025 Senac - Sistema de Agendamento de Salas.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

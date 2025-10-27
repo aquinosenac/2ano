@@ -1,13 +1,16 @@
-// firebase-config.js
-
+// Configuração do Firebase (copie do console do Firebase)
 const firebaseConfig = {
-  apiKey: "AIzaSyBxnddI0DdTFkL0U8jko9FzL845WA88GBo", // <- substitua aqui
-  authDomain: "asasas.firebaseapp.com",
-  projectId: "asasas",
-  storageBucket: "asasas.appspot.com",
-  messagingSenderId: "891727406371",  // <- substitua aqui
-  appId: "1:891727406371:web:ce3a7dbfbea9d379c3d896"                  // <- substitua aqui
+  apiKey: "xxxxx",
+  authDomain: "xxxxx.firebaseapp.com",
+  projectId: "xxxxx",
+  storageBucket: "xxxxx.appspot.com",
+  messagingSenderId: "xxxxx",
+  appId: "xxxxx"
 };
 
 // Inicializa Firebase
 firebase.initializeApp(firebaseConfig);
+
+// Cria variáveis globais (IMPORTANTE!)
+window.auth = firebase.auth();
+window.db = firebase.firestore();

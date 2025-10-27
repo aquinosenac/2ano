@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel do Gerente - Senac Agendamentos</title>
+  <link rel="stylesheet" href="/projetoagendamento/style.css">
+  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore-compat.js"></script>
+<script src="../firebase-config.js"></script>
+
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-content">
+        <div class="navbar-logo">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+          <span class="navbar-title">Painel do Gerente</span>
+        </div>
+        <div class="navbar-menu">
+          <a href="../usuário.html" class="navbar-link">Início</a>
+          <a href="../salas-horarios.html" class="navbar-link">Horários</a>
+          <button id="logoutBtn" class="btn-primary">Sair</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="schedule-section">
+    <div class="schedule-container">
+      <div class="section-header">
+        <h2 class="section-title">Painel do Gerente</h2>
+        <p class="section-subtitle">Gerencie horários e reservas</p>
+      </div>
+
+      <div class="rooms-grid">
+        <div class="room-card available">
+          <h3>📅 Gerenciar Horários</h3>
+          <p>Adicione, edite ou libere horários de salas.</p>
+          <button class="btn-cta">Abrir Grade</button>
+        </div>
+
+        <div class="room-card available">
+          <h3>📋 Aprovar Reservas</h3>
+          <p>Avalie e aprove pedidos de reserva pendentes.</p>
+          <button class="btn-cta">Ver Solicitações</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>
