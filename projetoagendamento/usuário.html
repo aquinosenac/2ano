@@ -5,33 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Senac Agendamentos - Sistema de Reserva de Salas</title>
     <meta name="description" content="Sistema de agendamento de salas e laboratórios do Senac. Reserve espaços de forma rápida e fácil.">
-<script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore-compat.js"></script>
-<script src="../firebase-config.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore-compat.js"></script>
+    
+    <script src="../firebase-config.js"></script>
+    
 
     <link rel="stylesheet" href="style.css">
 </head>
+
+
+
 <body>
     
     <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-container">
-            <div class="navbar-content">
-                <div class="navbar-logo">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                    </svg>
-                    <span class="navbar-title">Senac Agendamentos</span>
-                </div>
-                <div class="navbar-menu">
-                    <a href="usuário.html" class="navbar-link">Início</a>
-                    <a href="salas-horarios.html" class="navbar-link">Grade de Horários</a>
-                    <a href="login-cadastro/login.html"><button class="btn-primary">Fazer Login</button></a>
-                </div>
+          <div class="navbar-content">
+            <div class="navbar-logo">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span class="navbar-title">Senac Agendamentos</span>
             </div>
+      
+            <div class="navbar-actions">
+              <a href="usuário.html" class="navbar-link">Início</a>
+              <a href="salas-horarios.html" class="navbar-link">Grade de Horários</a>
+      
+              <!-- Botões de login e cadastro -->
+              <div class="auth-buttons">
+                <a href="login-cadastro/login.html">
+                  <button class="btn-primary">Fazer Login</button>
+                </a>
+                <a href="login-cadastro/cadastro.html">
+                  <button class="btn-primary">Cadastrar</button>
+                </a>
+              </div>
+      
+              <!-- Área do perfil (inicialmente escondida) -->
+              <div class="profile-area" style="display:none;">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                     alt="Perfil" class="profile-img">
+                <button id="logoutBtn" class="logout-btn">Sair</button>
+              </div>
+            </div>
+          </div>
         </div>
-    </nav>
+      </nav>
+
+      
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -223,6 +248,143 @@
         </div>
     </footer>
 
-
+<!-- COLE ISTO APENAS ONCE, APÓS firebase-config.js e ANTES de </body> -->
+<script>
+    (async function(){
+      if (document.readyState === "loading") await new Promise(r=>document.addEventListener("DOMContentLoaded", r));
+    
+      // checagem básica
+      if (typeof firebase === "undefined") {
+        console.error("Firebase NÃO carregado — verifique as tags <script> do Firebase e /firebase-config.js");
+        // fallback de teste (exibe botões para não travar a página)
+        return;
+      }
+    
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+      console.log("Login-UI consolidated iniciado");
+    
+      // Seletores que queremos esconder (adicione os seus se forem diferentes)
+      const loginSelectors = [
+        ".auth-buttons", ".btn-login", ".btn-cadastro",
+        ".btn-hero-primary", ".btn-hero-secondary", ".btn-hero",
+        ".cta-login", "#cta-login",
+        'a[href*="login-cadastro/login.html"]',
+        'a[href*="login-cadastro/cadastro.html"]',
+        ".login-link", ".signup-link", ".register-link"
+      ];
+    
+      function findLoginNodes() {
+        const nodes = new Set();
+        for (const s of loginSelectors) {
+          document.querySelectorAll(s).forEach(n=>nodes.add(n));
+        }
+        // também pega botões dentro do hero com texto
+        document.querySelectorAll("button").forEach(b=>{
+          const txt = (b.textContent||"").toLowerCase();
+          if (txt.includes("login") || txt.includes("cadast")) nodes.add(b);
+        });
+        return Array.from(nodes);
+      }
+    
+      // Cria área de perfil global (apenas uma vez)
+      function ensureProfileArea() {
+        let area = document.querySelector("._profile-area-global");
+        if (area) return area;
+        const navbar = document.querySelector(".navbar .navbar-container") || document.querySelector(".navbar") || document.body;
+        area = document.createElement("div");
+        area.className = "_profile-area-global";
+        area.style.display = "none";
+        area.style.alignItems = "center";
+        area.style.gap = "0.6rem";
+        area.style.marginLeft = "12px";
+        area.innerHTML = `
+          <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="perfil" style="width:36px;height:36px;border-radius:50%;object-fit:cover">
+          <div style="display:flex;flex-direction:column">
+            <div class="_name" style="font-weight:600"></div>
+            <div class="_role" style="font-size:0.8rem;opacity:0.8"></div>
+          </div>
+          <button class="_btn-logout-global" style="padding:6px 10px;border-radius:8px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer">Sair</button>
+        `;
+        // anexa ao final do navbar (ou ao body se não houver)
+        navbar.appendChild(area);
+        return area;
+      }
+    
+      const profileArea = ensureProfileArea();
+      const profileImg = profileArea.querySelector("img");
+      const profileNameEl = profileArea.querySelector("._name");
+      const profileRoleEl = profileArea.querySelector("._role");
+      const logoutBtn = profileArea.querySelector("._btn-logout-global");
+    
+      function hideLoginButtons() {
+        const nodes = findLoginNodes();
+        nodes.forEach(n => { n.__prevDisplay = n.style.display || ""; n.style.display = "none"; });
+        document.querySelectorAll('a[href*="login-cadastro"]').forEach(a=>{ a.__prevDisplay = a.style.display || ""; a.style.display = "none"; });
+      }
+      function showLoginButtons() {
+        const nodes = findLoginNodes();
+        nodes.forEach(n => { n.style.display = n.__prevDisplay || ""; delete n.__prevDisplay; });
+        document.querySelectorAll('a[href*="login-cadastro"]').forEach(a=>{ a.style.display = a.__prevDisplay || ""; delete a.__prevDisplay; });
+      }
+    
+      // MutationObserver para pegar elementos dinâmicos
+      const mo = new MutationObserver(() => { if (auth.currentUser) hideLoginButtons(); });
+      mo.observe(document.body, { childList:true, subtree:true });
+    
+      // onAuthStateChanged principal
+      auth.onAuthStateChanged(async (user) => {
+        try {
+          if (user) {
+            console.log("Usuário logado:", user.email);
+            hideLoginButtons();
+            profileArea.style.display = "flex";
+    
+            // busca nome/cargo
+            let nome = user.displayName || user.email.split("@")[0];
+            let cargo = "usuario";
+            try {
+              const doc = await db.collection("usuarios").doc(user.uid).get();
+              if (doc.exists) {
+                const d = doc.data();
+                if (d.nome) nome = d.nome;
+                if (d.cargo) cargo = d.cargo;
+                if (d.photoURL) profileImg.src = d.photoURL;
+              }
+            } catch(e) { console.warn("Erro ao ler Firestore:", e); }
+    
+            profileNameEl.textContent = nome;
+            profileRoleEl.textContent = cargo.charAt(0).toUpperCase() + cargo.slice(1);
+    
+          } else {
+            console.log("Nenhum usuário logado");
+            showLoginButtons();
+            profileArea.style.display = "none";
+          }
+        } catch (err) {
+          console.error("Erro no onAuthStateChanged:", err);
+        }
+      });
+    
+      // logout
+      logoutBtn.addEventListener("click", async () => {
+        try {
+          await auth.signOut();
+          console.log("Deslogado com sucesso");
+          // reload garante UI limpa
+          location.reload();
+        } catch(err) {
+          console.error("Erro logout:", err);
+          alert("Erro ao sair: " + err.message);
+        }
+      });
+    
+      // inicial
+      if (auth.currentUser) { hideLoginButtons(); profileArea.style.display = "flex"; }
+    
+      console.log("Login-UI consolidated OK");
+    })();
+    </script>
+    
 </body>
 </html>

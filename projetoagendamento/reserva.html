@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Nova Reserva</title>
+  <link rel="stylesheet" href="../style.css">
+  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore-compat.js"></script>
+  <script src="../firebase-config.js"></script>
+</head>
+<body>
+
+  <div class="dashboard-container">
+    <h2 class="dashboard-title">Solicitar Reserva</h2>
+    <form id="formReserva">
+      <label>Sala:</label>
+      <input type="text" id="sala" required>
+
+      <label>Data:</label>
+      <input type="date" id="data" required>
+
+      <label>Horário:</label>
+      <input type="text" id="horario" placeholder="Ex: 14:00 - 16:00" required>
+
+      <label>Descrição:</label>
+      <textarea id="descricao" placeholder="Motivo do uso"></textarea>
+
+      <button type="submit" class="btn-primary" style="margin-top:1rem;">Enviar Solicitação</button>
+    </form>
+  </div>
+
+<script>
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  document.getElementById('formReserva').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const user = auth.currentUser;
+    if (!user) return alert("Faça login primeiro!");
+
+    const sala = sala.value.trim();
+    const data = document.getElementById('data').value;
+    const horario = document.getElementById('horario').value;
+    const descricao = document.getElementById('descricao').value;
+
+    const usuarioDoc = await db.collection("usuarios").doc(user.uid).get();
+    const nomeUsuario = usuarioDoc.exists ? usuarioDoc.data().nome : user.email;
+
+    await db.collection("reservas").add({
+      sala, data, horario, descricao,
+      status: "pendente",
+      uidUsuario: user.uid,
+      nomeUsuario,
+      criadoEm: new Date()
+    });
+
+    alert("Reserva enviada para aprovação!");
+    e.target.reset();
+  });
+</script>
+
+</body>
+</html>

@@ -345,5 +345,19 @@
             <p>&copy; 2025 Senac. Sistema de Gerenciamento de Salas.</p>
         </div>
     </footer>
+    <script>
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        
+        // exemplo: mostrar reservas aprovadas
+        db.collection("reservas").where("status", "==", "aprovada").onSnapshot(snapshot => {
+          snapshot.forEach(doc => {
+            const r = doc.data();
+            console.log(`Sala ${r.sala} reservada ${r.data} ${r.horario} por ${r.nomeUsuario}`);
+            // aqui você pode pintar no calendário visual, dependendo da lib usada
+          });
+        });
+        </script>
+        
 </body>
 </html>

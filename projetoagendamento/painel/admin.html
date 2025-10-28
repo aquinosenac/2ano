@@ -2,68 +2,59 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel do Administrador - Senac Agendamentos</title>
-  <link rel="stylesheet" href="/projetoagendamento/style.css">
+  <title>Painel do Administrador</title>
+  <link rel="stylesheet" href="../style.css">
   <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore-compat.js"></script>
-<script src="../firebase-config.js"></script>
-
+  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore-compat.js"></script>
+  <script src="../firebase-config.js"></script>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="navbar-container">
-      <div class="navbar-content">
-        <div class="navbar-logo">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-          </svg>
-          <span class="navbar-title">Painel do Administrador</span>
+
+  <div class="dashboard-container">
+    <h2 class="dashboard-title">Gerenciar Usuários</h2>
+    <div id="listaUsuarios" class="reserva-list"></div>
+  </div>
+
+<script>
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+auth.onAuthStateChanged(async user => {
+  if (!user) return location.href = "../login-cadastro/login.html";
+  const docUser = await db.collection("usuarios").doc(user.uid).get();
+  const cargo = docUser.exists ? docUser.data().cargo : "usuario";
+  if (cargo !== "admin") return location.href = "../usuário.html";
+
+  const lista = document.getElementById("listaUsuarios");
+
+  db.collection("usuarios").onSnapshot(snapshot => {
+    lista.innerHTML = "";
+    snapshot.forEach(doc => {
+      const u = doc.data();
+      const card = document.createElement("div");
+      card.className = "reserva-card";
+      card.innerHTML = `
+        <div class="reserva-info">
+          <strong>${u.nome || doc.id}</strong>
+          <span>${u.email || ""}</span>
+          <span class="reserva-status">${u.cargo}</span>
         </div>
-        <div class="navbar-menu">
-          <a href="../usuário.html" class="navbar-link">Início</a>
-          <a href="../salas-horarios.html" class="navbar-link">Horários</a>
-          <button id="logoutBtn" class="btn-primary">Sair</button>
+        <div class="reserva-actions">
+          <select class="cargoSelect">
+            <option value="usuario" ${u.cargo==="usuario"?"selected":""}>Usuário</option>
+            <option value="gerente" ${u.cargo==="gerente"?"selected":""}>Gerente</option>
+            <option value="admin" ${u.cargo==="admin"?"selected":""}>Admin</option>
+          </select>
         </div>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Main -->
-  <main class="schedule-section">
-    <div class="schedule-container">
-      <div class="section-header">
-        <h2 class="section-title">Gerenciar Usuários</h2>
-        <p class="section-subtitle">Visualize, edite cargos e remova usuários do sistema</p>
-      </div>
-
-      <!-- Tabela de usuários -->
-      <div class="users-table-container">
-        <table class="users-table">
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Email</th>
-              <th>Cargo</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody id="tabelaUsuarios">
-            <!-- Linhas geradas via JS -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </main>
-
-  <footer class="footer">
-    <div class="footer-container">
-      <p>&copy; 2025 Senac - Sistema de Agendamento de Salas.</p>
-    </div>
-  </footer>
+      `;
+      const select = card.querySelector(".cargoSelect");
+      select.onchange = () => db.collection("usuarios").doc(doc.id).update({ cargo: select.value });
+      lista.appendChild(card);
+    });
+  });
+});
+</script>
 
 </body>
 </html>

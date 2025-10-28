@@ -1,23 +1,24 @@
-// ================= FIREBASE CONFIG ==================
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// ================= LOGOUT ==================
+// logout
 document.getElementById("logoutBtn")?.addEventListener("click", async () => {
   await auth.signOut();
   window.location.href = "../login-cadastro/login.html";
 });
 
-// ================= VERIFICA LOGIN ==================
+// verifica login e permissão
 auth.onAuthStateChanged(async (user) => {
   if (!user) {
     window.location.href = "../login-cadastro/login.html";
     return;
   }
 
-  const doc = await db.collection("usuarios").doc(user.uid).get();
-  if (!doc.exists || doc.data().cargo !== "admin") {
-    alert("Acesso negado! Apenas administradores podem entrar aqui.");
+  const userDoc = await db.collection("usuarios").doc(user.uid).get();
+  const cargo = userDoc.data()?.cargo;
+
+  if (cargo !== "admin") {
+    alert("Acesso negado!");
     window.location.href = "../usuário.html";
     return;
   }
@@ -25,7 +26,7 @@ auth.onAuthStateChanged(async (user) => {
   carregarUsuarios();
 });
 
-// ================= CARREGAR USUÁRIOS ==================
+// carrega lista de usuários
 async function carregarUsuarios() {
   const tabela = document.getElementById("tabelaUsuarios");
   tabela.innerHTML = "<tr><td colspan='4'>Carregando...</td></tr>";
@@ -34,17 +35,16 @@ async function carregarUsuarios() {
   tabela.innerHTML = "";
 
   snapshot.forEach(doc => {
-    const usuario = doc.data();
-
+    const u = doc.data();
     const linha = document.createElement("tr");
     linha.innerHTML = `
-      <td>${usuario.nome || "-"}</td>
-      <td>${usuario.email}</td>
+      <td>${u.nome || "-"}</td>
+      <td>${u.email}</td>
       <td>
-        <select class="selectCargo" data-id="${doc.id}">
-          <option value="usuario" ${usuario.cargo === "usuario" ? "selected" : ""}>Usuário</option>
-          <option value="gerente" ${usuario.cargo === "gerente" ? "selected" : ""}>Gerente</option>
-          <option value="admin" ${usuario.cargo === "admin" ? "selected" : ""}>Administrador</option>
+        <select data-id="${doc.id}" class="selectCargo">
+          <option value="usuario" ${u.cargo === "usuario" ? "selected" : ""}>Usuário</option>
+          <option value="gerente" ${u.cargo === "gerente" ? "selected" : ""}>Gerente</option>
+          <option value="admin" ${u.cargo === "admin" ? "selected" : ""}>Administrador</option>
         </select>
       </td>
       <td>
@@ -58,29 +58,24 @@ async function carregarUsuarios() {
   ativarEventosTabela();
 }
 
-// ================= EVENTOS DOS BOTÕES ==================
 function ativarEventosTabela() {
-  // salvar cargo
   document.querySelectorAll(".btnSalvar").forEach(btn => {
     btn.addEventListener("click", async (e) => {
-      const id = e.target.getAttribute("data-id");
+      const id = e.target.dataset.id;
       const novoCargo = document.querySelector(`.selectCargo[data-id="${id}"]`).value;
-
       await db.collection("usuarios").doc(id).update({ cargo: novoCargo });
-      alert("Cargo atualizado com sucesso!");
+      alert("Cargo atualizado!");
     });
   });
 
-  // excluir usuário
   document.querySelectorAll(".btnExcluir").forEach(btn => {
     btn.addEventListener("click", async (e) => {
-      const id = e.target.getAttribute("data-id");
-      const confirmar = confirm("Tem certeza que deseja remover este usuário?");
-      if (!confirmar) return;
-
-      await db.collection("usuarios").doc(id).delete();
-      alert("Usuário removido com sucesso!");
-      carregarUsuarios();
+      const id = e.target.dataset.id;
+      if (confirm("Excluir este usuário?")) {
+        await db.collection("usuarios").doc(id).delete();
+        alert("Usuário removido!");
+        carregarUsuarios();
+      }
     });
   });
 }

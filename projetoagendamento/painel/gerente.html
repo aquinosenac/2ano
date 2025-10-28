@@ -2,57 +2,68 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel do Gerente - Senac Agendamentos</title>
-  <link rel="stylesheet" href="/projetoagendamento/style.css">
+  <title>Painel do Gerente</title>
+  <link rel="stylesheet" href="../style.css">
   <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore-compat.js"></script>
-<script src="../firebase-config.js"></script>
-
+  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore-compat.js"></script>
+  <script src="../firebase-config.js"></script>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="navbar-container">
-      <div class="navbar-content">
-        <div class="navbar-logo">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-          </svg>
-          <span class="navbar-title">Painel do Gerente</span>
-        </div>
-        <div class="navbar-menu">
-          <a href="../usuário.html" class="navbar-link">Início</a>
-          <a href="../salas-horarios.html" class="navbar-link">Horários</a>
-          <button id="logoutBtn" class="btn-primary">Sair</button>
-        </div>
-      </div>
-    </div>
-  </nav>
 
-  <main class="schedule-section">
-    <div class="schedule-container">
-      <div class="section-header">
-        <h2 class="section-title">Painel do Gerente</h2>
-        <p class="section-subtitle">Gerencie horários e reservas</p>
-      </div>
+  <div class="dashboard-container">
+    <h2 class="dashboard-title">Solicitações Pendentes</h2>
+    <div id="listaReservas" class="reserva-list"></div>
+  </div>
 
-      <div class="rooms-grid">
-        <div class="room-card available">
-          <h3>📅 Gerenciar Horários</h3>
-          <p>Adicione, edite ou libere horários de salas.</p>
-          <button class="btn-cta">Abrir Grade</button>
-        </div>
+<script>
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-        <div class="room-card available">
-          <h3>📋 Aprovar Reservas</h3>
-          <p>Avalie e aprove pedidos de reserva pendentes.</p>
-          <button class="btn-cta">Ver Solicitações</button>
+auth.onAuthStateChanged(async user => {
+  if (!user) {
+    alert("Faça login primeiro!");
+    return (location.href = "../login-cadastro/login.html");
+  }
+
+  const docUser = await db.collection("usuarios").doc(user.uid).get();
+  const cargo = docUser.exists ? docUser.data().cargo : "usuario";
+  if (cargo !== "gerente" && cargo !== "admin") {
+    alert("Acesso negado!");
+    return (location.href = "../usuário.html");
+  }
+
+  const lista = document.getElementById("listaReservas");
+
+  db.collection("reservas").orderBy("criadoEm", "desc").onSnapshot(snapshot => {
+    lista.innerHTML = "";
+    snapshot.forEach(doc => {
+      const r = doc.data();
+      const card = document.createElement("div");
+      card.className = "reserva-card";
+      card.innerHTML = `
+        <div class="reserva-info">
+          <strong>${r.sala}</strong>
+          <span>${r.data} - ${r.horario}</span>
+          <small>${r.nomeUsuario}</small>
+          <span class="reserva-status ${r.status}">${r.status}</span>
         </div>
-      </div>
-    </div>
-  </main>
+        <div class="reserva-actions">
+          <button class="btn-action btn-approve">Aprovar</button>
+          <button class="btn-action btn-reject">Recusar</button>
+          <button class="btn-action btn-delete">Excluir</button>
+        </div>
+      `;
+      const [btnA, btnR, btnD] = card.querySelectorAll("button");
+      btnA.onclick = () => db.collection("reservas").doc(doc.id).update({ status: "aprovada" });
+      btnR.onclick = () => db.collection("reservas").doc(doc.id).update({ status: "recusada" });
+      btnD.onclick = () => db.collection("reservas").doc(doc.id).delete();
+
+      lista.appendChild(card);
+    });
+  });
+});
+</script>
 
 </body>
 </html>
