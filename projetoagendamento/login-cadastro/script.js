@@ -56,7 +56,7 @@ document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
       } else if (cargo === "gerente") {
         window.location.href = "../painel/gerente.html";
       } else {
-        window.location.href = "../usuário.html";
+        window.location.href = "../reserva.html";
       }
     } else {
       alert("Usuário sem cargo definido!");

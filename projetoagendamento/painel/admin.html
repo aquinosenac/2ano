@@ -10,7 +10,29 @@
   <script src="../firebase-config.js"></script>
 </head>
 <body>
-
+      <nav class="navbar">
+        <div class="navbar-container">
+          <div class="navbar-content">
+            <div class="navbar-logo">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span class="navbar-title">Reservas</span>
+            </div>
+      
+            <div class="navbar-actions">
+              <a href="usuário.html" class="navbar-link">Logout</a>
+              <a href="salas-horarios.html" class="navbar-link">Grade de Horários</a>
+              <div class="profile-area" style="display:none;">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                     alt="Perfil" class="profile-img">
+                <button id="logoutBtn" class="logout-btn">Sair</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
   <div class="dashboard-container">
     <h2 class="dashboard-title">Gerenciar Usuários</h2>
     <div id="listaUsuarios" class="reserva-list"></div>

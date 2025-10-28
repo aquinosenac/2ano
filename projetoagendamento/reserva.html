@@ -2,63 +2,119 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Nova Reserva</title>
-  <link rel="stylesheet" href="../style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solicitar Reserva - Senac Agendamentos</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+      <nav class="navbar">
+        <div class="navbar-container">
+          <div class="navbar-content">
+            <div class="navbar-logo">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span class="navbar-title">Reservas</span>
+            </div>
+      
+            <div class="navbar-actions">
+              <a href="usuário.html" class="navbar-link">Logout</a>
+              <a href="salas-horarios.html" class="navbar-link">Grade de Horários</a>
+              <div class="profile-area" style="display:none;">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                     alt="Perfil" class="profile-img">
+                <button id="logoutBtn" class="logout-btn">Sair</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+  <div class="reserva-container">
+    <h2>Solicitar Reserva de Sala</h2>
+    <form id="reservaForm">
+      <label for="sala">Sala:</label>
+      <select id="sala" required>
+        <option value="">Selecione uma sala</option>
+        <option value="Sala 101">Sala 101</option>
+        <option value="Sala 102">Sala 102</option>
+        <option value="Sala 103">Sala 103</option>
+        <option value="Sala 104">Sala 104</option>
+        <option value="Sala 202">Sala 202</option>
+        <option value="Sala 203">Sala 203</option>
+        <option value="Sala 204">Sala 204</option>
+        <option value="Sala 205">Sala 205</option>
+        <option value="Sala 206">Sala 206</option>
+        <option value="Sala 207">Sala 207</option>
+        <option value="Sala 208">Sala 208</option>
+        <option value="Sala 209">Sala 209</option>
+      </select>
+
+      <label for="horario">Horário:</label>
+      <select id="horario" required>
+        <option value="">Selecione o horário</option>
+        <option value="07:00 - 09:00">07:00 - 09:00</option>
+        <option value="09:00 - 11:00">09:00 - 11:00</option>
+        <option value="11:00 - 13:00">11:00 - 13:00</option>
+        <option value="13:00 - 15:00">13:00 - 15:00</option>
+        <option value="15:00 - 17:00">15:00 - 17:00</option>
+        <option value="17:00 - 19:00">17:00 - 19:00</option>
+        <option value="19:00 - 21:00">19:00 - 21:00</option>
+        <option value="21:00 - 22:00">21:00 - 22:00</option>
+      </select>
+
+      <label for="descricao">Descrição:</label>
+      <input type="text" id="descricao" placeholder="Ex: Aula de Design, Reunião, Workshop" required>
+
+      <button type="submit" class="btn-primary">Enviar solicitação</button>
+    </form>
+
+    <p id="mensagem"></p>
+  </div>
+
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore-compat.js"></script>
-  <script src="../firebase-config.js"></script>
-</head>
-<body>
+  <script src="firebase-config.js"></script>
 
-  <div class="dashboard-container">
-    <h2 class="dashboard-title">Solicitar Reserva</h2>
-    <form id="formReserva">
-      <label>Sala:</label>
-      <input type="text" id="sala" required>
-
-      <label>Data:</label>
-      <input type="date" id="data" required>
-
-      <label>Horário:</label>
-      <input type="text" id="horario" placeholder="Ex: 14:00 - 16:00" required>
-
-      <label>Descrição:</label>
-      <textarea id="descricao" placeholder="Motivo do uso"></textarea>
-
-      <button type="submit" class="btn-primary" style="margin-top:1rem;">Enviar Solicitação</button>
-    </form>
-  </div>
-
-<script>
-  const auth = firebase.auth();
+  <script>
   const db = firebase.firestore();
+  const auth = firebase.auth();
 
-  document.getElementById('formReserva').addEventListener('submit', async (e) => {
+  const form = document.getElementById('reservaForm');
+  const mensagem = document.getElementById('mensagem');
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
+
     const user = auth.currentUser;
-    if (!user) return alert("Faça login primeiro!");
+    if (!user) {
+      mensagem.textContent = "Você precisa estar logado para reservar uma sala.";
+      mensagem.style.color = "red";
+      return;
+    }
 
-    const sala = sala.value.trim();
-    const data = document.getElementById('data').value;
-    const horario = document.getElementById('horario').value;
-    const descricao = document.getElementById('descricao').value;
-
-    const usuarioDoc = await db.collection("usuarios").doc(user.uid).get();
-    const nomeUsuario = usuarioDoc.exists ? usuarioDoc.data().nome : user.email;
-
-    await db.collection("reservas").add({
-      sala, data, horario, descricao,
+    const reserva = {
+      sala: document.getElementById('sala').value,
+      horario: document.getElementById('horario').value,
+      descricao: document.getElementById('descricao').value,
+      nomeUsuario: user.displayName || user.email,
       status: "pendente",
-      uidUsuario: user.uid,
-      nomeUsuario,
       criadoEm: new Date()
-    });
+    };
 
-    alert("Reserva enviada para aprovação!");
-    e.target.reset();
+    try {
+      await db.collection("reservas").add(reserva);
+      mensagem.textContent = "✅ Solicitação enviada com sucesso! Aguarde aprovação.";
+      mensagem.style.color = "green";
+      form.reset();
+    } catch (error) {
+      console.error("Erro ao enviar reserva:", error);
+      mensagem.textContent = "Erro ao enviar reserva. Tente novamente.";
+      mensagem.style.color = "red";
+    }
   });
-</script>
-
+  </script>
 </body>
 </html>

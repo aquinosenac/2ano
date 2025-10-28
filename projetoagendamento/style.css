@@ -802,4 +802,76 @@ body {
   .btn-approve:hover { background: #15803d; }
   .btn-reject:hover { background: #b91c1c; }
   .btn-delete:hover { background: #6b7280; }
-  
+
+
+.time-slot.available {
+  background: #d1fae5; /* verde claro */
+  border: 1px solid #a7f3d0;
+  transition: background 0.3s;
+  cursor: pointer;
+}
+
+.time-slot.occupied {
+  background: #ef4444; /* vermelho */
+  color: #fff;
+  text-align: center;
+  font-weight: bold;
+  border: 1px solid #dc2626;
+  transition: background 0.3s;
+}
+.reserva-container {
+  background: #fff;
+  padding: 2em;
+  max-width: 400px;
+  margin: 5vh auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.reserva-container h2 {
+  text-align: center;
+  margin-bottom: 1em;
+  color: #333;
+}
+
+.reserva-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+}
+
+.reserva-container label {
+  font-weight: bold;
+  text-align: left;
+}
+
+.reserva-container input,
+.reserva-container select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1em;
+}
+
+.reserva-container button {
+  background: #4CAF50;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s;
+}
+
+.reserva-container button:hover {
+  background: #43a047;
+}
+
+#mensagem {
+  text-align: center;
+  margin-top: 1em;
+  font-weight: bold;
+}
+
+
