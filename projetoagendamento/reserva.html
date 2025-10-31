@@ -3,72 +3,118 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Solicitar Reserva - Senac Agendamentos</title>
+  <title>Painel do Usuário - Senac Agendamentos</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #f8fafc, #eef2ff);
+      font-family: 'Poppins', sans-serif;
+      color: #1e293b;
+      margin: 0;
+      padding: 0;
+    }
+
+    .user-container {
+      max-width: 1000px;
+      margin: 60px auto;
+      background: white;
+      border-radius: 16px;
+      padding: 30px 40px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      text-align: center;
+      color: #1e3a8a;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .salas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .sala-card {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .sala-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .sala-card h3 {
+      color: #1e3a8a;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .sala-card p {
+      font-size: 0.95rem;
+      color: #475569;
+      margin-bottom: 0.3rem;
+    }
+
+    .sala-actions {
+      margin-top: 10px;
+      text-align: right;
+    }
+
+    button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      background: #1d4ed8;
+      color: white;
+      cursor: pointer;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #2563eb;
+    }
+
+    .logout-btn {
+      display: block;
+      margin: 30px auto 0;
+      background: #ef4444;
+    }
+
+    .logout-btn:hover {
+      background: #dc2626;
+    }
+
+    .form-reserva {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .form-reserva input, .form-reserva textarea {
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
-      <nav class="navbar">
-        <div class="navbar-container">
-          <div class="navbar-content">
-            <div class="navbar-logo">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <span class="navbar-title">Reservas</span>
-            </div>
-      
-            <div class="navbar-actions">
-              <a href="usuário.html" class="navbar-link">Logout</a>
-              <div class="profile-area" style="display:none;">
-                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                     alt="Perfil" class="profile-img">
-                <button id="logoutBtn" class="logout-btn">Sair</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-  <div class="reserva-container">
-    <h2>Solicitar Reserva de Sala</h2>
-    <form id="reservaForm">
-      <label for="sala">Sala:</label>
-      <select id="sala" required>
-        <option value="">Selecione uma sala</option>
-        <option value="Sala 101">Sala 101</option>
-        <option value="Sala 102">Sala 102</option>
-        <option value="Sala 103">Sala 103</option>
-        <option value="Sala 104">Sala 104</option>
-        <option value="Sala 202">Sala 202</option>
-        <option value="Sala 203">Sala 203</option>
-        <option value="Sala 204">Sala 204</option>
-        <option value="Sala 205">Sala 205</option>
-        <option value="Sala 206">Sala 206</option>
-        <option value="Sala 207">Sala 207</option>
-        <option value="Sala 208">Sala 208</option>
-        <option value="Sala 209">Sala 209</option>
-      </select>
+  <div class="user-container">
+    <h1>Salas Disponíveis</h1>
+    <p style="text-align:center;color:#475569">Escolha uma sala para fazer sua reserva.</p>
+    
+    <div id="salas-grid" class="salas-grid"></div>
 
-      <label for="horario">Horário:</label>
-      <select id="horario" required>
-        <option value="">Selecione o horário</option>
-        <option value="07:00 - 09:00">07:00 - 09:00</option>
-        <option value="09:00 - 11:00">09:00 - 11:00</option>
-        <option value="11:00 - 13:00">11:00 - 13:00</option>
-        <option value="13:00 - 15:00">13:00 - 15:00</option>
-        <option value="15:00 - 17:00">15:00 - 17:00</option>
-        <option value="17:00 - 19:00">17:00 - 19:00</option>
-        <option value="19:00 - 21:00">19:00 - 21:00</option>
-        <option value="21:00 - 22:00">21:00 - 22:00</option>
-      </select>
-
-      <label for="descricao">Descrição:</label>
-      <input type="text" id="descricao" placeholder="Ex: Aula de Design, Reunião, Workshop" required>
-
-      <button type="submit" class="btn-primary">Enviar solicitação</button>
-    </form>
-
-    <p id="mensagem"></p>
+    <button id="logout" class="logout-btn">Sair</button>
   </div>
 
   <!-- Firebase -->
@@ -81,39 +127,77 @@
   const db = firebase.firestore();
   const auth = firebase.auth();
 
-  const form = document.getElementById('reservaForm');
-  const mensagem = document.getElementById('mensagem');
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const user = auth.currentUser;
+  auth.onAuthStateChanged(async user => {
     if (!user) {
-      mensagem.textContent = "Você precisa estar logado para reservar uma sala.";
-      mensagem.style.color = "red";
+      window.location.href = "login-cadastro/login.html";
       return;
     }
 
-    const reserva = {
-      sala: document.getElementById('sala').value,
-      horario: document.getElementById('horario').value,
-      descricao: document.getElementById('descricao').value,
-      nomeUsuario: user.displayName || user.email,
-      status: "pendente",
-      criadoEm: new Date()
-    };
+    carregarSalas();
 
-    try {
-      await db.collection("reservas").add(reserva);
-      mensagem.textContent = "✅ Solicitação enviada com sucesso! Aguarde aprovação.";
-      mensagem.style.color = "green";
-      form.reset();
-    } catch (error) {
-      console.error("Erro ao enviar reserva:", error);
-      mensagem.textContent = "Erro ao enviar reserva. Tente novamente.";
-      mensagem.style.color = "red";
-    }
+    document.getElementById("logout").addEventListener("click", () => {
+      auth.signOut().then(() => window.location.href = "usuário.html");
+    });
   });
+
+  function carregarSalas() {
+    db.collection("salas").onSnapshot(snapshot => {
+      const grid = document.getElementById("salas-grid");
+      grid.innerHTML = "";
+      snapshot.forEach(doc => {
+        const s = doc.data();
+        const salaCard = document.createElement("div");
+        salaCard.classList.add("sala-card");
+        salaCard.innerHTML = `
+          <h3>${s.nome}</h3>
+          <p>${s.descricao}</p>
+          <p><strong>Capacidade:</strong> ${s.capacidade} pessoas</p>
+          <div class="sala-actions">
+            <button onclick="abrirFormularioReserva('${s.nome}')">Reservar</button>
+          </div>
+        `;
+        grid.appendChild(salaCard);
+      });
+    });
+  }
+
+  function abrirFormularioReserva(salaNome) {
+    const modal = document.createElement("div");
+    modal.classList.add("sala-card");
+    modal.style.position = "fixed";
+    modal.style.top = "50%";
+    modal.style.left = "50%";
+    modal.style.transform = "translate(-50%, -50%)";
+    modal.style.zIndex = "999";
+    modal.style.width = "350px";
+    modal.style.background = "#fff";
+    modal.style.boxShadow = "0 4px 20px rgba(0,0,0,0.2)";
+    modal.innerHTML = `
+      <h3>Reserva - ${salaNome}</h3>
+      <form class="form-reserva" onsubmit="enviarReserva(event, '${salaNome}', this)">
+        <input type="text" name="horario" placeholder="Ex: 14:00 - 16:00" required>
+        <textarea name="descricao" placeholder="Motivo da reserva" required></textarea>
+        <button type="submit">Enviar Solicitação</button>
+        <button type="button" onclick="this.parentElement.parentElement.remove()" style="background:#9ca3af">Cancelar</button>
+      </form>
+    `;
+    document.body.appendChild(modal);
+  }
+
+  async function enviarReserva(e, sala, form) {
+    e.preventDefault();
+    const horario = form.horario.value;
+    const descricao = form.descricao.value;
+    const user = auth.currentUser;
+    const nomeUsuario = user.displayName || user.email;
+
+    await db.collection("reservas").add({
+      sala, horario, descricao, nomeUsuario, status: "pendente"
+    });
+
+    alert("Reserva enviada para aprovação!");
+    form.parentElement.remove();
+  }
   </script>
 </body>
 </html>

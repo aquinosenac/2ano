@@ -2,88 +2,131 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Painel do Gerente</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel do Gerente - Senac Agendamentos</title>
   <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <div class="painel-container">
+    <h1>Painel do Gerente</h1>
+
+    <section class="secao">
+      <h2>🏫 Gerenciar Salas</h2>
+      <form id="formSala">
+        <input type="text" id="nomeSala" placeholder="Nome da Sala" required>
+        <input type="text" id="descricaoSala" placeholder="Descrição" required>
+        <input type="number" id="capacidadeSala" placeholder="Capacidade" required>
+        <button type="submit" class="btn-primary">Adicionar Sala</button>
+      </form>
+      <div id="lista-salas" class="lista"></div>
+    </section>
+
+    <section class="secao">
+      <h2>📅 Aprovar / Excluir Reservas</h2>
+      <div id="reservas-lista" class="lista"></div>
+    </section>
+
+    <button id="logout" class="btn-secondary">Sair</button>
+  </div>
+
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore-compat.js"></script>
   <script src="../firebase-config.js"></script>
-</head>
-<body>
-      <nav class="navbar">
-        <div class="navbar-container">
-          <div class="navbar-content">
-            <div class="navbar-logo">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <span class="navbar-title">Reservas</span>
-            </div>
-      
-            <div class="navbar-actions">
-              <a href="../usuário.html" class="navbar-link">Logout</a>
-              <div class="profile-area" style="display:none;">
-                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                     alt="Perfil" class="profile-img">
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-  <div class="dashboard-container">
-    <h2 class="dashboard-title">Solicitações Pendentes</h2>
-    <div id="listaReservas" class="reserva-list"></div>
-  </div>
 
-<script>
-const auth = firebase.auth();
-const db = firebase.firestore();
+  <script>
+  const db = firebase.firestore();
+  const auth = firebase.auth();
 
-auth.onAuthStateChanged(async user => {
-  if (!user) {
-    alert("Faça login primeiro!");
-    return (location.href = "../login-cadastro/login.html");
-  }
-
-  const docUser = await db.collection("usuarios").doc(user.uid).get();
-  const cargo = docUser.exists ? docUser.data().cargo : "usuario";
-  if (cargo !== "gerente" && cargo !== "admin") {
-    alert("Acesso negado!");
-    return (location.href = "../usuário.html");
-  }
-
-  const lista = document.getElementById("listaReservas");
-
-  db.collection("reservas").orderBy("criadoEm", "desc").onSnapshot(snapshot => {
-    lista.innerHTML = "";
-    snapshot.forEach(doc => {
-      const r = doc.data();
-      const card = document.createElement("div");
-      card.className = "reserva-card";
-      card.innerHTML = `
-        <div class="reserva-info">
-          <strong>${r.sala}</strong>
-          <span>${r.data} - ${r.horario}</span>
-          <small>${r.nomeUsuario}</small>
-          <span class="reserva-status ${r.status}">${r.status}</span>
-        </div>
-        <div class="reserva-actions">
-          <button class="btn-action btn-approve">Aprovar</button>
-          <button class="btn-action btn-reject">Recusar</button>
-          <button class="btn-action btn-delete">Excluir</button>
-        </div>
-      `;
-      const [btnA, btnR, btnD] = card.querySelectorAll("button");
-      btnA.onclick = () => db.collection("reservas").doc(doc.id).update({ status: "aprovada" });
-      btnR.onclick = () => db.collection("reservas").doc(doc.id).update({ status: "recusada" });
-      btnD.onclick = () => db.collection("reservas").doc(doc.id).delete();
-
-      lista.appendChild(card);
+  // ======= SALAS =======
+  function carregarSalas() {
+    db.collection("salas").onSnapshot(snapshot => {
+      const lista = document.getElementById("lista-salas");
+      lista.innerHTML = "";
+      snapshot.forEach(doc => {
+        const s = doc.data();
+        const item = document.createElement("div");
+        item.classList.add("item");
+        item.innerHTML = `
+          <strong>${s.nome}</strong> (${s.capacidade} lugares) - ${s.descricao}
+          <button onclick="excluirSala('${doc.id}')">Excluir</button>
+        `;
+        lista.appendChild(item);
+      });
     });
-  });
-});
-</script>
+  }
 
+  document.getElementById("formSala").addEventListener("submit", async e => {
+    e.preventDefault();
+    const nome = document.getElementById("nomeSala").value.trim();
+    const descricao = document.getElementById("descricaoSala").value.trim();
+    const capacidade = parseInt(document.getElementById("capacidadeSala").value);
+    await db.collection("salas").add({ nome, descricao, capacidade });
+    e.target.reset();
+  });
+
+  async function excluirSala(id) {
+    await db.collection("salas").doc(id).delete();
+  }
+
+  // ======= RESERVAS =======
+  function carregarReservas() {
+    db.collection("reservas").where("status", "==", "pendente").onSnapshot(snapshot => {
+      const container = document.getElementById("reservas-lista");
+      container.innerHTML = "";
+      if (snapshot.empty) {
+        container.innerHTML = "<p>Nenhuma reserva pendente.</p>";
+        return;
+      }
+
+      snapshot.forEach(doc => {
+        const r = doc.data();
+        const div = document.createElement("div");
+        div.classList.add("item");
+        div.innerHTML = `
+          <strong>${r.sala}</strong> - ${r.horario}<br>
+          ${r.descricao}<br>
+          Solicitado por: ${r.nomeUsuario}<br>
+          <button onclick="aprovarReserva('${doc.id}')">Aprovar</button>
+          <button onclick="excluirReserva('${doc.id}')">Excluir</button>
+        `;
+        container.appendChild(div);
+      });
+    });
+  }
+
+  async function aprovarReserva(id) {
+    await db.collection("reservas").doc(id).update({ status: "aprovada" });
+  }
+
+  async function excluirReserva(id) {
+    await db.collection("reservas").doc(id).delete();
+  }
+
+  // ======= LOGOUT =======
+  document.getElementById("logout").addEventListener("click", () => {
+    auth.signOut().then(() => window.location.href = "../usuário.html");
+  });
+
+  // ======= VALIDAÇÃO DE CARGO =======
+  auth.onAuthStateChanged(async user => {
+    if (!user) {
+      window.location.href = "../login-cadastro/login.html";
+      return;
+    }
+
+    const docRef = await db.collection("usuarios").doc(user.uid).get();
+    const cargo = docRef.exists ? docRef.data().cargo : null;
+    if (cargo !== "gerente" && cargo !== "admin") {
+      alert("Acesso negado.");
+      window.location.href = "../usuário.html";
+      return;
+    }
+
+    carregarSalas();
+    carregarReservas();
+  });
+  </script>
 </body>
 </html>

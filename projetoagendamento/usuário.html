@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Senac Agendamentos - Sistema de Reserva de Salas</title>
-    <meta name="description" content="Sistema de agendamento de salas e laboratórios do Senac. Reserve espaços de forma rápida e fácil.">
+    <meta name="description"
+        content="Sistema de agendamento de salas e laboratórios do Senac. Reserve espaços de forma rápida e fácil.">
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore-compat.js"></script>
-    
+
     <script src="../firebase-config.js"></script>
-    
+
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -18,50 +20,50 @@
 
 
 <body>
-    
+
     <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-container">
-          <div class="navbar-content">
-            <div class="navbar-logo">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <span class="navbar-title">Senac Agendamentos</span>
-            </div>
-      
-            <div class="navbar-actions">
-              <a href="usuário.html" class="navbar-link">Início</a>
-              <a href="salas-horarios.html" class="navbar-link">Grade de Horários</a>
-      
-              <!-- Botões de login e cadastro -->
-              <div class="auth-buttons">
-                <a href="login-cadastro/login.html">
-                  <button class="btn-primary">Fazer Login</button>
-                </a>
-                <a href="login-cadastro/cadastro.html">
-                  <button class="btn-primary">Cadastrar</button>
-                </a>
-              </div>
-      
-              <!-- Área do perfil (inicialmente escondida) -->
-              <div class="profile-area" style="display:none;">
-                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                     alt="Perfil" class="profile-img">
-                <button id="logoutBtn" class="logout-btn">Sair</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
+            <div class="navbar-content">
+                <div class="navbar-logo">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span class="navbar-title">Senac Agendamentos</span>
+                </div>
 
-      
+                <div class="navbar-actions">
+                    <a href="usuário.html" class="navbar-link">Início</a>
+                    <a href="salas-horarios.html" class="navbar-link">Grade de Horários</a>
+
+                    <!-- Botões de login e cadastro -->
+                    <div class="auth-buttons">
+                        <a href="login-cadastro/login.html">
+                            <button class="btn-primary">Fazer Login</button>
+                        </a>
+                        <a href="login-cadastro/cadastro.html">
+                            <button class="btn-primary">Cadastrar</button>
+                        </a>
+                    </div>
+
+                    <!-- Área do perfil (inicialmente escondida) -->
+                    <div class="profile-area" style="display:none;">
+                        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Perfil"
+                            class="profile-img">
+                        <button id="logoutBtn" class="logout-btn">Sair</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
 
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="hero-background hero-gradient"></div>
-        
+
         <div class="hero-container">
             <div class="hero-content">
                 <h1 class="hero-title">
@@ -86,7 +88,9 @@
                 <div class="feature-card">
                     <div class="feature-icon">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                            </path>
                         </svg>
                     </div>
                     <h3 class="feature-title">Agendamento Fácil</h3>
@@ -94,12 +98,13 @@
                         Visualize a disponibilidade e reserve salas em poucos cliques
                     </p>
                 </div>
-                
+
                 <!-- Feature 2 -->
                 <div class="feature-card">
                     <div class="feature-icon">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
                     <h3 class="feature-title">Tempo Real</h3>
@@ -107,12 +112,14 @@
                         Acompanhe o status das salas em tempo real
                     </p>
                 </div>
-                
+
                 <!-- Feature 3 -->
                 <div class="feature-card">
                     <div class="feature-icon">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                            </path>
                         </svg>
                     </div>
                     <h3 class="feature-title">Gestão Segura</h3>
@@ -124,11 +131,13 @@
         </div>
     </section>
 
-    
-            <div class="cta-section">
-                <button class="btn-cta">Fazer Login para Reservar</button>
-            </div>
-        </div>
+
+    <div class="cta-section">
+        <a href="login-cadastro/login.html">
+            <button class="btn-cta">Fazer Login para Reservar</button>
+        </a>
+    </div>
+    </div>
     </section>
 
     <!-- Footer -->
@@ -139,6 +148,7 @@
     </footer>
 
 
-    
+
 </body>
+
 </html>
