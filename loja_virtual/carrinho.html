@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrinho - TechStore</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container header-content">
+      <a href="home.html" class="logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        TechStore
+      </a>
+
+      <nav>
+        <a href="home.html" class="btn btn-ghost">Home</a>
+        <a href="produtos.html" class="btn btn-ghost">Produtos</a>
+        <a href="admin.html" class="btn btn-ghost">Admin</a>
+        <a href="carrinho.html" class="btn btn-primary cart-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span class="cart-badge" style="display: none;">0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+      <div>
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Carrinho de Compras</h1>
+        <p style="color: var(--text-light);" id="cartItemCount">0 itens no carrinho</p>
+      </div>
+      <a href="produtos.html" class="btn btn-outline">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Continuar Comprando
+      </a>
+    </div>
+
+    <div id="cartContent">
+      <!-- Conteúdo do carrinho será carregado via JavaScript -->
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 TechStore. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="js/storage.js"></script>
+  <script>
+    function loadCart() {
+      const cart = getCart();
+      const total = getCartTotal();
+      const container = document.getElementById('cartContent');
+      const itemCount = document.getElementById('cartItemCount');
+
+      itemCount.textContent = `${cart.length} ${cart.length === 1 ? 'item' : 'itens'} no carrinho`;
+
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <h2>Seu carrinho está vazio</h2>
+            <p>Adicione produtos para começar suas compras</p>
+            <a href="produtos.html" class="btn btn-primary">Ver Produtos</a>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="grid-2">
+          <div class="cart-items" id="cartItems">
+            ${cart.map(item => `
+              <div class="cart-item">
+                <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                <div class="cart-item-content">
+                  <h3 class="cart-item-title">${item.name}</h3>
+                  <p style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 0.5rem;">${item.description}</p>
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="cart-item-price">R$ ${item.price.toFixed(2)}</span>
+                    <div class="cart-item-actions">
+                      <button class="btn btn-outline" style="padding: 0.5rem;" onclick="decreaseQuantity('${item.id}')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                      </button>
+                      <input 
+                        type="number" 
+                        class="quantity-input" 
+                        value="${item.quantity}" 
+                        min="1" 
+                        max="${item.stock}"
+                        onchange="updateQuantity('${item.id}', this.value)"
+                      >
+                      <button class="btn btn-outline" style="padding: 0.5rem;" onclick="increaseQuantity('${item.id}', ${item.stock})">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <line x1="12" y1="5" x2="12" y2="19"></line>
+                          <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                      </button>
+                      <button class="btn btn-danger" style="padding: 0.5rem;" onclick="removeItem('${item.id}')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="3 6 5 6 21 6"></polyline>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+            <button class="btn btn-outline" style="width: 100%; margin-top: 1rem;" onclick="handleClearCart()">
+              Limpar Carrinho
+            </button>
+          </div>
+
+          <div class="cart-summary">
+            <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Resumo do Pedido</h2>
+            
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span style="font-weight: 500;">R$ ${total.toFixed(2)}</span>
+            </div>
+            <div class="summary-row">
+              <span>Frete</span>
+              <span style="color: var(--success); font-weight: 500;">Grátis</span>
+            </div>
+            
+            <div class="summary-total">
+              <span>Total</span>
+              <span style="color: var(--primary);">R$ ${total.toFixed(2)}</span>
+            </div>
+
+            <button class="btn btn-accent" style="width: 100%; padding: 1rem; font-size: 1.125rem;" onclick="handleCheckout()">
+              Finalizar Compra
+            </button>
+
+            <p style="text-align: center; color: var(--text-light); font-size: 0.75rem; margin-top: 1rem;">
+              Pagamento 100% seguro e protegido
+            </p>
+          </div>
+        </div>
+      `;
+    }
+
+    function updateQuantity(id, quantity) {
+      const qty = parseInt(quantity) || 1;
+      updateCartQuantity(id, qty);
+      loadCart();
+    }
+
+    function increaseQuantity(id, maxStock) {
+      const cart = getCart();
+      const item = cart.find(i => i.id === id);
+      if (item && item.quantity < maxStock) {
+        updateCartQuantity(id, item.quantity + 1);
+        loadCart();
+      }
+    }
+
+    function decreaseQuantity(id) {
+      const cart = getCart();
+      const item = cart.find(i => i.id === id);
+      if (item) {
+        updateCartQuantity(id, item.quantity - 1);
+        loadCart();
+      }
+    }
+
+    function removeItem(id) {
+      if (confirm('Deseja remover este item do carrinho?')) {
+        removeFromCart(id);
+        loadCart();
+      }
+    }
+
+    function handleClearCart() {
+      if (confirm('Deseja limpar todo o carrinho?')) {
+        clearCart();
+        loadCart();
+      }
+    }
+
+    function handleCheckout() {
+      const cart = getCart();
+      if (cart.length === 0) {
+        showNotification('Seu carrinho está vazio', 'danger');
+        return;
+      }
+      
+      const total = getCartTotal();
+      showNotification(`Pedido realizado com sucesso! Total: R$ ${total.toFixed(2)}`, 'success');
+      clearCart();
+      
+      setTimeout(() => {
+        window.location.href = 'home.html';
+      }, 2000);
+    }
+
+    // Carregar ao iniciar
+    document.addEventListener('DOMContentLoaded', loadCart);
+  </script>
+</body>
+</html>

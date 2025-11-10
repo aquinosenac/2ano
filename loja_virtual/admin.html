@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - TechStore</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container header-content">
+      <a href="home.html" class="logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        TechStore
+      </a>
+
+      <nav>
+        <a href="home.html" class="btn btn-ghost">Home</a>
+        <a href="produtos.html" class="btn btn-ghost">Produtos</a>
+        <a href="admin.html" class="btn btn-ghost">Admin</a>
+        <a href="carrinho.html" class="btn btn-primary cart-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span class="cart-badge" style="display: none;">0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
+    <div class="mb-4">
+      <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Painel Administrativo</h1>
+      <p style="color: var(--text-light);">Gerencie os produtos da sua loja</p>
+    </div>
+
+    <!-- Formulário -->
+    <div class="admin-form">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.5rem;" id="formTitle">Adicionar Novo Produto</h2>
+        <button class="btn btn-ghost" id="cancelBtn" style="display: none;" onclick="resetForm()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+          Cancelar
+        </button>
+      </div>
+
+      <form id="productForm" onsubmit="handleSubmit(event)">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="name">Nome do Produto *</label>
+            <input type="text" id="name" required placeholder="Ex: Notebook Gamer">
+          </div>
+
+          <div class="form-group">
+            <label for="category">Categoria *</label>
+            <input type="text" id="category" required placeholder="Ex: Eletrônicos">
+          </div>
+
+          <div class="form-group">
+            <label for="price">Preço (R$) *</label>
+            <input type="number" id="price" step="0.01" required placeholder="0.00">
+          </div>
+
+          <div class="form-group">
+            <label for="stock">Estoque *</label>
+            <input type="number" id="stock" required placeholder="0">
+          </div>
+
+          <div class="form-group" style="grid-column: 1 / -1;">
+            <label for="image">URL da Imagem</label>
+            <input type="text" id="image" placeholder="https://exemplo.com/imagem.jpg">
+          </div>
+
+          <div class="form-group" style="grid-column: 1 / -1;">
+            <label for="description">Descrição</label>
+            <textarea id="description" placeholder="Descreva o produto..."></textarea>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <input type="checkbox" id="featured">
+            <label for="featured">Produto em Destaque</label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span id="submitText">Adicionar Produto</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Lista de Produtos -->
+    <div>
+      <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">
+        Produtos Cadastrados (<span id="productCount">0</span>)
+      </h2>
+
+      <div class="admin-products" id="productsList">
+        <!-- Produtos serão carregados via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 TechStore. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="js/storage.js"></script>
+  <script>
+    let editingId = null;
+
+    function loadProducts() {
+      const products = getProducts();
+      const container = document.getElementById('productsList');
+      const count = document.getElementById('productCount');
+
+      count.textContent = products.length;
+
+      if (products.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <p style="color: var(--text-light);">Nenhum produto cadastrado ainda</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = products.map(product => `
+        <div class="admin-product-card">
+          <img src="${product.image || 'https://via.placeholder.com/100'}" alt="${product.name}" class="admin-product-image">
+          <div class="admin-product-content">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <div>
+                <h3 style="font-size: 1.125rem; font-weight: 600;">${product.name}</h3>
+                <div style="display: flex; gap: 0.5rem; margin-top: 0.25rem;">
+                  <span class="product-category">${product.category}</span>
+                  ${product.featured ? '<span class="badge">Destaque</span>' : ''}
+                </div>
+              </div>
+              <div class="admin-product-actions">
+                <button class="btn btn-outline" onclick="editProduct('${product.id}')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                </button>
+                <button class="btn btn-danger" onclick="deleteProductById('${product.id}')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <p style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 0.5rem;">${product.description}</p>
+            <div style="display: flex; gap: 1rem; font-size: 0.875rem;">
+              <span style="font-size: 1.125rem; font-weight: bold; color: var(--primary);">R$ ${product.price.toFixed(2)}</span>
+              <span style="color: var(--text-light);">Estoque: ${product.stock}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function handleSubmit(event) {
+      event.preventDefault();
+
+      const formData = {
+        name: document.getElementById('name').value,
+        description: document.getElementById('description').value,
+        price: parseFloat(document.getElementById('price').value),
+        image: document.getElementById('image').value || 'https://via.placeholder.com/500',
+        category: document.getElementById('category').value,
+        stock: parseInt(document.getElementById('stock').value),
+        featured: document.getElementById('featured').checked,
+      };
+
+      if (editingId) {
+        updateProduct(editingId, formData);
+        showNotification('Produto atualizado com sucesso!', 'success');
+      } else {
+        const newProduct = {
+          ...formData,
+          id: Date.now().toString(),
+        };
+        addProduct(newProduct);
+        showNotification('Produto adicionado com sucesso!', 'success');
+      }
+
+      resetForm();
+      loadProducts();
+    }
+
+    function editProduct(id) {
+      const product = getProductById(id);
+      if (!product) return;
+
+      editingId = id;
+
+      document.getElementById('name').value = product.name;
+      document.getElementById('description').value = product.description;
+      document.getElementById('price').value = product.price;
+      document.getElementById('image').value = product.image;
+      document.getElementById('category').value = product.category;
+      document.getElementById('stock').value = product.stock;
+      document.getElementById('featured').checked = product.featured;
+
+      document.getElementById('formTitle').textContent = 'Editar Produto';
+      document.getElementById('submitText').textContent = 'Atualizar Produto';
+      document.getElementById('cancelBtn').style.display = 'block';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function deleteProductById(id) {
+      if (confirm('Tem certeza que deseja excluir este produto?')) {
+        deleteProduct(id);
+        showNotification('Produto excluído com sucesso!', 'success');
+        loadProducts();
+      }
+    }
+
+    function resetForm() {
+      editingId = null;
+      document.getElementById('productForm').reset();
+      document.getElementById('formTitle').textContent = 'Adicionar Novo Produto';
+      document.getElementById('submitText').textContent = 'Adicionar Produto';
+      document.getElementById('cancelBtn').style.display = 'none';
+    }
+
+    // Carregar ao iniciar
+    document.addEventListener('DOMContentLoaded', loadProducts);
+  </script>
+</body>
+</html>
