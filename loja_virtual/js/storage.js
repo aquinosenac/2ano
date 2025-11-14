@@ -2,6 +2,8 @@
 
 const PRODUCTS_KEY = 'ecommerce_products';
 const CART_KEY = 'ecommerce_cart';
+const USERS_KEY = 'ecommerce_users';
+const CURRENT_USER_KEY = 'ecommerce_current_user';
 
 // Produtos iniciais para demonstração
 const initialProducts = [
@@ -242,6 +244,85 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
+// ============= Funções de Autenticação =============
+
+function getUsers() {
+  const stored = localStorage.getItem(USERS_KEY);
+  return stored ? JSON.parse(stored) : [];
+}
+
+function saveUsers(users) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+
+function registerUser(name, email, password) {
+  const users = getUsers();
+  
+  // Verifica se o email já está cadastrado
+  if (users.find(u => u.email === email)) {
+    return { success: false, message: 'Este e-mail já está cadastrado.' };
+  }
+
+  // Validações básicas
+  if (name.length < 3) {
+    return { success: false, message: 'Nome deve ter pelo menos 3 caracteres.' };
+  }
+
+  if (!email.includes('@') || !email.includes('.')) {
+    return { success: false, message: 'E-mail inválido.' };
+  }
+
+  if (password.length < 6) {
+    return { success: false, message: 'Senha deve ter pelo menos 6 caracteres.' };
+  }
+
+  const newUser = {
+    id: Date.now().toString(),
+    name,
+    email,
+    password, // Em produção, use hash de senha!
+    createdAt: new Date().toISOString()
+  };
+
+  users.push(newUser);
+  saveUsers(users);
+
+  return { success: true, message: 'Usuário cadastrado com sucesso!' };
+}
+
+function loginUser(email, password) {
+  const users = getUsers();
+  const user = users.find(u => u.email === email && u.password === password);
+
+  if (!user) {
+    return { success: false, message: 'E-mail ou senha incorretos.' };
+  }
+
+  // Salva usuário atual (sem a senha)
+  const currentUser = {
+    id: user.id,
+    name: user.name,
+    email: user.email
+  };
+  
+  localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
+
+  return { success: true, user: currentUser };
+}
+
+function logoutUser() {
+  localStorage.removeItem(CURRENT_USER_KEY);
+}
+
+function getCurrentUser() {
+  const stored = localStorage.getItem(CURRENT_USER_KEY);
+  return stored ? JSON.parse(stored) : null;
+}
+
+function isLoggedIn() {
+  return getCurrentUser() !== null;
+}
 
 // Inicializar contador ao carregar página
 document.addEventListener('DOMContentLoaded', updateCartCount);
