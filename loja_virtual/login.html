@@ -3,9 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - TechStore</title>
-  <meta name="description" content="Faça login na TechStore para acessar sua conta">
+  <title>Login - TechTrust</title>
+  <meta name="description" content="Faça login na TechTrust para acessar sua conta">
   <link rel="stylesheet" href="css/style.css">
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script src="firebase.js"></script>
+<script src="auth.js"></script>
+
+  
 </head>
 <body>
   <header>
@@ -17,7 +26,7 @@
             <circle cx="20" cy="21" r="1"></circle>
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
           </svg>
-          TechStore
+          TechTrust
         </a>
         <nav>
           <a href="home.html" class="btn btn-ghost">Início</a>
@@ -47,12 +56,9 @@
                 <input type="password" id="password" name="password" required placeholder="••••••••" minlength="6">
               </div>
 
-              <div id="errorMessage" class="hidden" style="background: #ffebee; color: var(--danger); padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.875rem;">
-              </div>
+              <div id="errorMessage" class="hidden" style="background: #ffebee; color: var(--danger); padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.875rem;"></div>
 
-              <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">
-                Entrar
-              </button>
+              <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">Entrar</button>
 
               <p class="text-center" style="color: var(--text-light);">
                 Não tem uma conta? 
@@ -67,41 +73,48 @@
 
   <footer>
     <div class="container">
-      <p>&copy; 2024 TechStore. Todos os direitos reservados.</p>
+      <p>&copy; 2025 TechTrust. Todos os direitos reservados.</p>
     </div>
   </footer>
 
   <div id="notification" class="hidden"></div>
 
-  <script src="js/storage.js"></script>
   <script>
     const loginForm = document.getElementById('loginForm');
     const errorMessage = document.getElementById('errorMessage');
 
-    // Verifica se já está logado
-    if (isLoggedIn()) {
-      window.location.href = 'home.html';
+    // Se já está logado, manda para home
+    const user = appAuth.getCurrentUser();
+    if (user) {
+      window.location.href = "home.html";
     }
 
-    loginForm.addEventListener('submit', (e) => {
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       errorMessage.classList.add('hidden');
 
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
-      const result = loginUser(email, password);
+      const result = await appAuth.handleSignIn(email, password);
 
-      if (result.success) {
-        showNotification('Login realizado com sucesso!', 'success');
-        setTimeout(() => {
-          window.location.href = 'home.html';
-        }, 1000);
+      if (result.ok) {
+        const u = appAuth.getCurrentUser();
+
+        // REDIRECIONA CONFORME O PAPEL
+        if (u.role === "admin") {
+          window.location.href = "admin.html";
+        } else if (u.role === "gerente") {
+          window.location.href = "gerente.html";
+        } else {
+          window.location.href = "home.html";
+        }
       } else {
-        errorMessage.textContent = result.message;
-        errorMessage.classList.remove('hidden');
+        errorMessage.textContent = result.error || "Erro ao fazer login.";
+        errorMessage.classList.remove("hidden");
       }
     });
   </script>
+
 </body>
 </html>

@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cadastro - TechStore</title>
-  <meta name="description" content="Crie sua conta na TechStore e comece a comprar">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cadastro - TechTrust</title>
+  <meta name="description" content="Crie sua conta na TechTrust e comece a comprar">
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Firebase libs + nossos scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script src="firebase.js"></script>
+  <script src="auth.js"></script>
 </head>
 <body>
   <header>
     <div class="container">
       <div class="header-content">
-        <a href="home.html" class="logo">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="9" cy="21" r="1"></circle>
-            <circle cx="20" cy="21" r="1"></circle>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-          </svg>
-          TechStore
-        </a>
+        <a href="home.html" class="logo">TechTrust</a>
         <nav>
           <a href="home.html" class="btn btn-ghost">Início</a>
           <a href="produtos.html" class="btn btn-ghost">Produtos</a>
@@ -58,12 +59,9 @@
                 <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="••••••••" minlength="6">
               </div>
 
-              <div id="errorMessage" class="hidden" style="background: #ffebee; color: var(--danger); padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.875rem;">
-              </div>
+              <div id="errorMessage" class="hidden" style="background: #ffebee; color: var(--danger); padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.875rem;"></div>
 
-              <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">
-                Criar conta
-              </button>
+              <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">Criar conta</button>
 
               <p class="text-center" style="color: var(--text-light);">
                 Já tem uma conta? 
@@ -78,23 +76,22 @@
 
   <footer>
     <div class="container">
-      <p>&copy; 2024 TechStore. Todos os direitos reservados.</p>
+      <p>&copy; 2025 TechTrust. Todos os direitos reservados.</p>
     </div>
   </footer>
 
   <div id="notification" class="hidden"></div>
 
-  <script src="js/storage.js"></script>
   <script>
     const cadastroForm = document.getElementById('cadastroForm');
     const errorMessage = document.getElementById('errorMessage');
 
-    // Verifica se já está logado
-    if (isLoggedIn()) {
+    // Se já está logado, redireciona
+    if (appAuth.getCurrentUser()) {
       window.location.href = 'home.html';
     }
 
-    cadastroForm.addEventListener('submit', (e) => {
+    cadastroForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       errorMessage.classList.add('hidden');
 
@@ -103,22 +100,21 @@
       const password = document.getElementById('password').value;
       const confirmPassword = document.getElementById('confirmPassword').value;
 
-      // Validação de senhas
       if (password !== confirmPassword) {
         errorMessage.textContent = 'As senhas não coincidem.';
         errorMessage.classList.remove('hidden');
         return;
       }
 
-      const result = registerUser(name, email, password);
-
-      if (result.success) {
-        showNotification('Conta criada com sucesso!', 'success');
+      const res = await appAuth.handleSignUp(name, email, password);
+      if (res.ok) {
+        showNotification('Conta criada com sucesso! Aguarde redirecionamento...', 'success');
         setTimeout(() => {
+          // mandar para login (ou diretório home se quiser logar automaticamente)
           window.location.href = 'login.html';
-        }, 1500);
+        }, 1200);
       } else {
-        errorMessage.textContent = result.message;
+        errorMessage.textContent = res.error || 'Erro ao criar conta.';
         errorMessage.classList.remove('hidden');
       }
     });

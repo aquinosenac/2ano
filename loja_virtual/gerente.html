@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gerente - TechTrust</title>
+  <link rel="stylesheet" href="css/style.css">
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script src="firebase.js"></script>
+  <script src="auth.js"></script>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="home.html" class="logo">TechTrust</a>
+      <nav>
+        <a href="home.html" class="btn btn-ghost">Home</a>
+        <a href="produtos.html" class="btn btn-ghost">Produtos</a>
+        <button id="logoutBtn" class="btn btn-ghost">Sair</button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container" style="padding-top:2rem; padding-bottom:2rem;">
+    <h1>Área do Gerente</h1>
+    <p style="color:var(--text-light);">Gerencie produtos.</p>
+
+    <div class="admin-form" style="margin-top:1rem;">
+      <h2 id="formTitle">Adicionar/Editar Produto</h2>
+      <form id="productForm" onsubmit="handleSubmit(event)">
+        <div class="form-grid">
+          <div class="form-group"><label>Nome</label><input id="name" required></div>
+          <div class="form-group"><label>Categoria</label><input id="category" required></div>
+          <div class="form-group"><label>Preço</label><input id="price" type="number" step="0.01" required></div>
+          <div class="form-group"><label>Estoque</label><input id="stock" type="number" required></div>
+          <div class="form-group" style="grid-column:1/-1;"><label>Imagem (URL)</label><input id="image"></div>
+          <div class="form-group" style="grid-column:1/-1;"><label>Descrição</label><textarea id="description"></textarea></div>
+          <div class="form-group checkbox-group"><input id="featured" type="checkbox"><label for="featured">Destaque</label></div>
+        </div>
+        <button class="btn btn-primary" type="submit"><span id="submitText">Salvar</span></button>
+      </form>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <h2>Produtos</h2>
+      <div id="productsList" class="admin-products"></div>
+    </div>
+  </div>
+
+  <footer><div class="container"><p>&copy; 2025 TechTrust</p></div></footer>
+
+  <script>
+    let editingProductId = null;
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await appAuth.handleSignOut();
+      window.location.href = 'login.html';
+    });
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const ok = await appAuth.requireRole(['gerente', 'admin']);
+      if (!ok) return;
+      loadProducts();
+    });
+
+    async function loadProducts() {
+      const products = await firebaseApi.listProductsFirestore();
+      const container = document.getElementById('productsList');
+      container.innerHTML = products.map(p => `
+        <div class="admin-product-card">
+          <div style="flex:1;">
+            <h3>${p.name}</h3>
+            <p style="color:var(--text-light)">${p.category || ''} — R$ ${Number(p.price).toFixed(2)}</p>
+          </div>
+          <div>
+            <button class="btn btn-outline" onclick="editProduct('${p.id}')">Editar</button>
+            <button class="btn btn-danger" onclick="deleteProduct('${p.id}')">Excluir</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function handleSubmit(e) {
+      e.preventDefault();
+      const product = {
+        name: document.getElementById('name').value,
+        category: document.getElementById('category').value,
+        price: Number(document.getElementById('price').value),
+        stock: Number(document.getElementById('stock').value),
+        image: document.getElementById('image').value || 'https://via.placeholder.com/500',
+        description: document.getElementById('description').value,
+        featured: document.getElementById('featured').checked
+      };
+      if (editingProductId) {
+        await firebaseApi.updateProductFirestore(editingProductId, product);
+        showNotification('Produto atualizado', 'success');
+      } else {
+        await firebaseApi.addProductFirestore(product);
+        showNotification('Produto criado', 'success');
+      }
+      editingProductId = null;
+      document.getElementById('productForm').reset();
+      loadProducts();
+    }
+
+    async function editProduct(id) {
+      const p = await firebaseApi.getProductByIdFirestore(id);
+      if (!p) return;
+      editingProductId = id;
+      document.getElementById('name').value = p.name;
+      document.getElementById('category').value = p.category || '';
+      document.getElementById('price').value = p.price || 0;
+      document.getElementById('stock').value = p.stock || 0;
+      document.getElementById('image').value = p.image || '';
+      document.getElementById('description').value = p.description || '';
+      document.getElementById('featured').checked = !!p.featured;
+      document.getElementById('submitText').textContent = 'Atualizar';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm('Excluir produto?')) return;
+      await firebaseApi.deleteProductFirestore(id);
+      showNotification('Produto excluído', 'success');
+      loadProducts();
+    }
+  </script>
+
+  <script src="js/storage.js"></script>
+</body>
+</html>
