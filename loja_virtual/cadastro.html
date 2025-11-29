@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cadastro - TechTrust</title>
-  <meta name="description" content="Crie sua conta na TechTrust e comece a comprar">
   <link rel="stylesheet" href="css/style.css">
 
-  <!-- Firebase libs + nossos scripts -->
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -17,62 +16,65 @@
 </head>
 <body>
   <header>
-    <div class="container">
-      <div class="header-content">
-        <a href="home.html" class="logo">TechTrust</a>
-        <nav>
-          <a href="home.html" class="btn btn-ghost">Início</a>
-          <a href="produtos.html" class="btn btn-ghost">Produtos</a>
-          <a href="login.html" class="btn btn-primary">Entrar</a>
-        </nav>
-      </div>
+    <div class="container header-content">
+      <a href="home.html" class="logo">TechTrust</a>
+      <nav id="navMenu">
+        <a href="home.html" class="btn btn-ghost">Home</a>
+        <a href="produtos.html" class="btn btn-ghost">Produtos</a>
+        <a href="login.html" class="btn btn-primary">Entrar</a>
+        <a href="carrinho.html" class="btn btn-primary cart-btn" style="position:relative;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.6 13.59a2 2 0 0 0 2 1.41h9.72a2 2 0 0 0 2-1.72L23 6H6"></path>
+          </svg>
+          <span class="cart-badge" style="display:none; position:absolute; top:-6px; right:-6px; background:var(--accent); color:white; border-radius:50%; padding:2px 6px; font-size:12px;">0</span>
+        </a>
+      </nav>
     </div>
   </header>
 
-  <main>
-    <section class="section">
-      <div class="container">
-        <div style="max-width: 500px; margin: 0 auto;">
-          <div class="admin-form">
-            <h1 class="text-center mb-3">Criar sua conta</h1>
-            <p class="text-center mb-4" style="color: var(--text-light);">Preencha os dados abaixo para começar</p>
-            
-            <form id="cadastroForm">
-              <div class="form-group">
-                <label for="name">Nome completo</label>
-                <input type="text" id="name" name="name" required placeholder="João Silva" minlength="3">
-              </div>
+  <main class="section">
+    <div class="container" style="max-width:600px; margin:0 auto;">
+      <div class="admin-form">
+        <h1 class="text-center mb-3">Criar sua conta</h1>
+        <p class="text-center mb-4" style="color:var(--text-light);">Preencha os dados abaixo</p>
 
-              <div class="form-group">
-                <label for="email">E-mail</label>
-                <input type="email" id="email" name="email" required placeholder="seu@email.com">
-              </div>
+        <form id="registerForm">
+          <div class="form-group">
+            <label for="r_name">Nome completo</label>
+            <input id="r_name" type="text" required minlength="3" />
+          </div>
+          <div class="form-group">
+            <label for="r_email">E-mail</label>
+            <input id="r_email" type="email" required />
+          </div>
+          <div class="form-group">
+            <label for="r_password">Senha</label>
+            <input id="r_password" type="password" required minlength="6" />
+            <small style="color:var(--text-light)">Mínimo 6 caracteres</small>
+          </div>
+          <div class="form-group">
+            <label for="r_confirm">Confirmar senha</label>
+            <input id="r_confirm" type="password" required minlength="6" />
+          </div>
 
-              <div class="form-group">
-                <label for="password">Senha</label>
-                <input type="password" id="password" name="password" required placeholder="••••••••" minlength="6">
-                <small style="color: var(--text-light); font-size: 0.875rem;">Mínimo de 6 caracteres</small>
-              </div>
+          <div id="registerError" class="hidden" style="background:#ffebee; color:var(--danger); padding:.75rem; border-radius:8px; margin-bottom:1rem;"></div>
 
-              <div class="form-group">
-                <label for="confirmPassword">Confirmar senha</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="••••••••" minlength="6">
-              </div>
+          <button class="btn btn-primary" type="submit" style="width:100%;">Criar conta</button>
+        </form>
 
-              <div id="errorMessage" class="hidden" style="background: #ffebee; color: var(--danger); padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.875rem;"></div>
-
-              <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">Criar conta</button>
-
-              <p class="text-center" style="color: var(--text-light);">
-                Já tem uma conta? 
-                <a href="login.html" style="color: var(--primary); text-decoration: none; font-weight: 500;">Fazer login</a>
-              </p>
-            </form>
+        <div id="registerSuccess" class="hidden" style="margin-top:1rem; text-align:center;">
+          <div style="display:inline-block; padding:1rem 1.5rem; border-radius:12px; background:linear-gradient(135deg,#22c55e 0%,#16a34a 100%); color:white;">
+            Conta criada com sucesso! Você pode <a href="login.html" style="color:white; text-decoration:underline;">fazer login agora</a>.
           </div>
         </div>
       </div>
-    </section>
+    </div>
   </main>
+
+  <div id="notification" class="hidden"></div>
 
   <footer>
     <div class="container">
@@ -80,43 +82,86 @@
     </div>
   </footer>
 
-  <div id="notification" class="hidden"></div>
+  <script src="js/storage.js"></script>
 
   <script>
-    const cadastroForm = document.getElementById('cadastroForm');
-    const errorMessage = document.getElementById('errorMessage');
-
-    // Se já está logado, redireciona
-    if (appAuth.getCurrentUser()) {
-      window.location.href = 'home.html';
+    function notify(msg, type = 'success', ttl = 3000) {
+      let el = document.getElementById('notification');
+      if (!el) { el = document.createElement('div'); el.id = 'notification'; document.body.appendChild(el); }
+      el.textContent = msg;
+      el.className = ''; el.classList.add(type === 'success' ? 'success' : 'error'); el.classList.remove('hidden');
+      setTimeout(()=> el.classList.add('hidden'), ttl);
     }
 
-    cadastroForm.addEventListener('submit', async (e) => {
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      errorMessage.classList.add('hidden');
+      document.getElementById('registerError').classList.add('hidden');
+      document.getElementById('registerSuccess').classList.add('hidden');
 
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
+      const name = document.getElementById('r_name').value.trim();
+      const email = document.getElementById('r_email').value.trim();
+      const password = document.getElementById('r_password').value;
+      const confirm = document.getElementById('r_confirm').value;
 
-      if (password !== confirmPassword) {
-        errorMessage.textContent = 'As senhas não coincidem.';
-        errorMessage.classList.remove('hidden');
+      if (password !== confirm) {
+        document.getElementById('registerError').textContent = 'As senhas não coincidem.';
+        document.getElementById('registerError').classList.remove('hidden');
+        notify('As senhas não coincidem.', 'error');
         return;
       }
 
-      const res = await appAuth.handleSignUp(name, email, password);
-      if (res.ok) {
-        showNotification('Conta criada com sucesso! Aguarde redirecionamento...', 'success');
-        setTimeout(() => {
-          // mandar para login (ou diretório home se quiser logar automaticamente)
-          window.location.href = 'login.html';
-        }, 1200);
-      } else {
-        errorMessage.textContent = res.error || 'Erro ao criar conta.';
-        errorMessage.classList.remove('hidden');
+      try {
+        const cred = await firebaseApi.signUpWithEmail(email, password, name);
+
+        // opcional: não cria role por padrão
+        document.getElementById('registerForm').reset();
+        document.getElementById('registerSuccess').classList.remove('hidden');
+        notify('Conta criada com sucesso!', 'success');
+      } catch (err) {
+        console.error(err);
+        document.getElementById('registerError').textContent = err.message || 'Erro ao criar conta';
+        document.getElementById('registerError').classList.remove('hidden');
+        notify('Erro ao criar conta: ' + (err.message || ''), 'error');
       }
+    });
+
+    // apply header if already logged
+    document.addEventListener('DOMContentLoaded', async () => {
+      const wait = setInterval(() => {
+        if (window.firebaseApi) {
+          clearInterval(wait);
+          const user = JSON.parse(localStorage.getItem('ecommerce_current_user') || 'null');
+          if (user) {
+            (async function build() {
+              const nav = document.getElementById('navMenu');
+              const role = await firebaseApi.getRole(user.uid);
+              nav.innerHTML = `
+                <a href="home.html" class="btn btn-ghost">Home</a>
+                <a href="produtos.html" class="btn btn-ghost">Produtos</a>
+                ${ role === 'admin' ? `<a href="admin.html" class="btn btn-ghost">Admin</a>` : '' }
+                ${ role === 'gerente' ? `<a href="admin.html" class="btn btn-ghost">Gerente</a>` : '' }
+                <a href="carrinho.html" class="btn btn-primary cart-btn" style="position:relative;">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.6 13.59a2 2 0 0 0 2 1.41h9.72a2 2 0 0 0 2-1.72L23 6H6"></path>
+                  </svg>
+                  <span class="cart-badge" style="display:none; position:absolute; top:-6px; right:-6px; background:var(--accent); color:white; border-radius:50%; padding:2px 6px; font-size:12px;">0</span>
+                </a>
+                <span style="color:var(--text-light); margin-right:1rem;">${user.email} (${role})</span>
+                <button id="logoutBtn" class="btn btn-outline">Sair</button>
+              `;
+              document.getElementById('logoutBtn').onclick = async () => {
+                await firebaseApi.signOut();
+                localStorage.removeItem('ecommerce_current_user');
+                window.location.href = 'login.html';
+              };
+              if (typeof updateCartCount === 'function') updateCartCount();
+            })();
+          }
+        }
+      }, 80);
     });
   </script>
 </body>

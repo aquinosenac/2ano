@@ -27,14 +27,17 @@ async function signInWithEmail(email, password) {
 
 async function signUpWithEmail(email, password, displayName) {
   const cred = await firebaseAuth.createUserWithEmailAndPassword(email, password);
+
   if (displayName) {
     await cred.user.updateProfile({ displayName });
   }
+
   await firebaseDb.collection('users').doc(cred.user.uid).set({
     displayName: displayName || '',
     email: email,
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   });
+
   return cred;
 }
 
@@ -46,7 +49,7 @@ async function signOut() {
 async function getRole(uid) {
   if (!uid) return null;
   const doc = await firebaseDb.collection('roles').doc(uid).get();
-  return doc.exists ? doc.data().role : null;
+  return doc.exists ? doc.data().role : "usuario";
 }
 
 async function setRole(uid, role) {
@@ -68,7 +71,7 @@ async function listUserProfiles() {
   return snap.docs.map(d => ({ id: d.id, ...d.data() }));
 }
 
-// Products
+// Products (CRUD)
 async function addProductFirestore(product) {
   const ref = await firebaseDb.collection('products').add({
     ...product,

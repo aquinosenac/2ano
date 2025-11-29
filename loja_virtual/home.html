@@ -4,189 +4,169 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TechTrust - Sua Loja de Tecnologia Online</title>
-  <meta name="description" content="Os melhores produtos de tecnologia com preços imbatíveis e entrega rápida. Compre notebooks, smartphones, fones e muito mais.">
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script src="firebase.js"></script>
+  <script src="auth.js"></script>
+
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <div class="container header-content">
-      <a href="home.html" class="logo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+
+<!-- HEADER -->
+<header>
+  <div class="container header-content">
+    <a href="home.html" class="logo">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      TechTrust
+    </a>
+
+    <nav id="navMenu">
+      <a href="home.html" class="btn btn-ghost">Home</a>
+      <a href="produtos.html" class="btn btn-ghost">Produtos</a>
+      <a href="login.html" class="btn btn-ghost">Login</a>
+
+      <a href="carrinho.html" class="btn btn-primary cart-btn" style="position:relative;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2">
+          <circle cx="9" cy="21" r="1" />
+          <circle cx="20" cy="21" r="1" />
+          <path d="M1 1h4l2.6 13.59a2 2 0 0 0 2 1.41h9.72a2 2 0 0 0 2-1.72L23 6H6"/>
         </svg>
-        TechTrust
+        <span class="cart-badge" style="display:none;">0</span>
       </a>
+    </nav>
+  </div>
+</header>
 
-      <nav>
-        <a href="home.html" class="btn btn-ghost">Home</a>
-        <a href="login.html" class="btn btn-ghost">Login</a>
-        <a href="produtos.html" class="btn btn-ghost">Produtos</a>
-        <a href="admin.html" class="btn btn-ghost">Admin</a>
-        <a href="carrinho.html" class="btn btn-primary cart-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="9" cy="21" r="1"></circle>
-            <circle cx="20" cy="21" r="1"></circle>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-          </svg>
-          <span class="cart-badge" style="display: none;">0</span>
-        </a>
-      </nav>
-    </div>
-  </header>
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <h1>Bem-vindo à TechTrust</h1>
+    <p>Os melhores produtos de tecnologia com preços imbatíveis</p>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <h1>Bem-vindo à TechTrust</h1>
-      <p>Os melhores produtos de tecnologia com preços imbatíveis e entrega rápida</p>
-      <div class="hero-buttons">
-        <a href="produtos.html" class="btn btn-accent">
-          Ver Produtos
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </a>
+    <a href="produtos.html" class="btn btn-accent" style="margin-top:1rem;">
+      Ver Produtos
+    </a>
+  </div>
+</section>
+
+<!-- DESTAQUES -->
+<section class="section">
+  <div class="container">
+    <h2>Produtos em Destaque</h2>
+    <p style="color:var(--text-light)">Selecionados especialmente para você</p>
+
+    <div id="featuredProducts" class="products-grid" style="margin-top:2rem;"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2025 TechTrust</p>
+  </div>
+</footer>
+
+<div id="notification" class="hidden"></div>
+
+<script src="js/storage.js"></script>
+
+<script>
+function notify(msg, type='success'){
+  const n = document.getElementById("notification");
+  n.textContent = msg;
+  n.className = type;
+  n.classList.remove("hidden");
+  setTimeout(()=> n.classList.add("hidden"), 2000);
+}
+
+async function loadHeader(){
+  const user = JSON.parse(localStorage.getItem("ecommerce_current_user") || "null");
+  const nav = document.getElementById("navMenu");
+
+  if (!user){
+    updateCartCount?.();
+    return;
+  }
+
+  const role = await firebaseApi.getRole(user.uid);
+
+  nav.innerHTML = `
+    <a href="home.html" class="btn btn-ghost">Home</a>
+    <a href="produtos.html" class="btn btn-ghost">Produtos</a>
+
+    ${ role === "admin" ? `<a href="admin.html" class="btn btn-ghost">Admin</a>` : "" }
+    ${ role === "gerente" ? `<a href="gerente.html" class="btn btn-ghost">Gerente</a>` : "" }
+
+    <a href="carrinho.html" class="btn btn-primary cart-btn" style="position:relative;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2">
+        <circle cx="9" cy="21" r="1" />
+        <circle cx="20" cy="21" r="1" />
+        <path d="M1 1h4l2.6 13.59a2 2 0 0 0 2 1.41h9.72a2 2 0 0 0 2-1.72L23 6H6"/>
+      </svg>
+      <span class="cart-badge" style="display:none;">0</span>
+    </a>
+
+    <span style="color:var(--text-light); margin-left:.5rem;">${user.email} (${role})</span>
+    <button class="btn btn-outline" onclick="logout()">Sair</button>
+  `;
+
+  updateCartCount?.();
+}
+
+async function logout(){
+  await firebaseApi.signOut();
+  localStorage.removeItem("ecommerce_current_user");
+  window.location.href = "login.html";
+}
+
+async function loadFeatured(){
+  const list = await firebaseApi.listProductsFirestore();
+  const featured = list.filter(p => p.featured);
+
+  const box = document.getElementById("featuredProducts");
+
+  if (!featured.length){
+    box.innerHTML = "<p>Nenhum produto em destaque.</p>";
+    return;
+  }
+
+  box.innerHTML = featured.map(p => `
+    <div class="product-card">
+      <img src="${p.image}" class="product-image">
+
+      <div class="product-content">
+        <span class="product-category">${p.category}</span>
+
+        <h3 class="product-title">${p.name}</h3>
+
+        <p class="product-description">${p.description || ""}</p>
+
+        <div class="product-footer">
+          <span class="product-price">R$ ${Number(p.price).toFixed(2)}</span>
+
+          <button class="btn btn-primary" onclick="addToCart(${JSON.stringify(p).replace(/"/g,'&quot;')})">
+            Adicionar
+          </button>
+        </div>
       </div>
     </div>
-  </section>
+  `).join("");
+}
 
-  <!-- Features -->
-  <section class="features">
-    <div class="container">
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="1" y="3" width="15" height="13"></rect>
-              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-              <circle cx="5.5" cy="18.5" r="2.5"></circle>
-              <circle cx="18.5" cy="18.5" r="2.5"></circle>
-            </svg>
-          </div>
-          <h3>Entrega Rápida</h3>
-          <p>Receba em até 24h na sua região</p>
-        </div>
+document.addEventListener("DOMContentLoaded", async ()=>{
+  loadHeader();
+  loadFeatured();
+});
+</script>
 
-        <div class="feature-card">
-          <div class="feature-icon" style="background: var(--accent)">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-            </svg>
-          </div>
-          <h3>Compra Segura</h3>
-          <p>Seus dados protegidos em todas as transações</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon" style="background: var(--success)">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-            </svg>
-          </div>
-          <h3>Melhor Preço</h3>
-          <p>Garantimos os melhores preços do mercado</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Featured Products -->
-  <section class="section">
-    <div class="container">
-      <div class="section-header">
-        <div>
-          <h2>Produtos em Destaque</h2>
-          <p>Confira nossa seleção especial de produtos</p>
-        </div>
-        <a href="produtos.html" class="btn btn-outline">Ver Todos</a>
-      </div>
-
-      <div class="products-grid" id="featuredProducts">
-        <!-- Produtos serão carregados via JavaScript -->
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA Section -->
-  <section class="section" style="background: rgba(0,0,0,0.03);">
-    <div class="container text-center">
-      <h2 style="margin-bottom: 1rem;">Pronto para encontrar o produto perfeito?</h2>
-      <p style="color: var(--text-light); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-        Navegue por nossa coleção completa e encontre exatamente o que você precisa
-      </p>
-      <a href="produtos.html" class="btn btn-accent" style="font-size: 1.125rem; padding: 0.75rem 2rem;">
-        Explorar Catálogo
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-          <polyline points="12 5 19 12 12 19"></polyline>
-        </svg>
-      </a>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <p>&copy; 2025 TechTrust. Todos os direitos reservados.</p>
-      <p style="margin-top: 0.5rem;">Projeto Final - Sistema de E-commerce</p>
-    </div>
-  </footer>
-
-  <script src="js/storage.js"></script>
-  <script>
-    // Carregar produtos em destaque
-    function loadFeaturedProducts() {
-      const products = getProducts();
-      const featured = products.filter(p => p.featured).slice(0, 4);
-      const container = document.getElementById('featuredProducts');
-
-      if (featured.length === 0) {
-        container.innerHTML = '<p class="text-center">Nenhum produto em destaque</p>';
-        return;
-      }
-
-      container.innerHTML = featured.map(product => `
-        <div class="product-card">
-          <div style="position: relative;">
-            <img src="${product.image}" alt="${product.name}" class="product-image">
-            ${product.featured ? '<span class="badge">Destaque</span>' : ''}
-            ${product.stock === 0 ? '<span class="badge badge-danger">Esgotado</span>' : ''}
-          </div>
-          <div class="product-content">
-            <span class="product-category">${product.category}</span>
-            <h3 class="product-title">${product.name}</h3>
-            <p class="product-description">${product.description}</p>
-            <div class="product-stock">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-              </svg>
-              <span>${product.stock} em estoque</span>
-            </div>
-            <div class="product-footer">
-              <span class="product-price">R$ ${product.price.toFixed(2)}</span>
-              <button 
-                class="btn btn-primary" 
-                onclick="addToCart(getProductById('${product.id}'))"
-                ${product.stock === 0 ? 'disabled' : ''}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="9" cy="21" r="1"></circle>
-                  <circle cx="20" cy="21" r="1"></circle>
-                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                </svg>
-                Adicionar
-              </button>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    // Carregar ao iniciar
-    document.addEventListener('DOMContentLoaded', loadFeaturedProducts);
-  </script>
 </body>
 </html>

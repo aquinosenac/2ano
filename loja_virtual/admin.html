@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Admin - TechTrust</title>
   <link rel="stylesheet" href="css/style.css">
 
-  <!-- Firebase + scripts -->
+  <!-- Firebase (compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -19,84 +19,107 @@
   <header>
     <div class="container header-content">
       <a href="home.html" class="logo">TechTrust</a>
-      <nav>
+      <nav id="navMenu">
         <a href="home.html" class="btn btn-ghost">Home</a>
         <a href="produtos.html" class="btn btn-ghost">Produtos</a>
-        <button id="logoutBtn" class="btn btn-ghost">Sair</button>
+        <a href="login.html" class="btn btn-ghost">Login</a>
+        <a href="carrinho.html" class="btn btn-primary cart-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.6 13.59a2 2 0 0 0 2 1.41h9.72a2 2 0 0 0 2-1.72L23 6H6"></path>
+          </svg>
+          <span class="cart-badge" style="display:none; position:absolute; top:-6px; right:-6px; background:var(--accent); color:white; border-radius:50%; padding:2px 6px; font-size:12px;">0</span>
+        </a>
       </nav>
     </div>
   </header>
 
-  <div class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
-    <div class="mb-4">
-      <h1 style="font-size: 2.2rem; margin-bottom: 0.5rem;">Painel Administrativo</h1>
-      <p style="color: var(--text-light);">Gerencie produtos e usuários</p>
-      <div style="margin-top: 0.75rem;"><strong>Usuário:</strong> <span id="currentUserEmail">—</span></div>
+  <main class="container" style="padding:2rem 0;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+      <div>
+        <h1 style="font-size:2rem;">Painel Administrativo</h1>
+        <p style="color:var(--text-light); margin-top:0.25rem;">Gerencie produtos e usuários</p>
+      </div>
+      <div id="currentUserInfo" style="color:var(--text-light)">Carregando usuário...</div>
     </div>
 
-    <!-- Formulário de Produtos -->
-    <div class="admin-form">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-        <h2 id="formTitle">Adicionar Novo Produto</h2>
-        <button class="btn btn-ghost" id="cancelBtn" style="display:none" onclick="resetForm()">Cancelar</button>
-      </div>
-
-      <form id="productForm" onsubmit="handleSubmit(event)">
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="name">Nome do Produto *</label>
-            <input type="text" id="name" required placeholder="Ex: Notebook Gamer">
+    <div class="grid-2">
+      <!-- Produtos -->
+      <section>
+        <div class="admin-form" style="margin-bottom:1.5rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+            <h2 id="productFormTitle">Adicionar Produto</h2>
+            <button id="cancelProductBtn" class="btn btn-ghost" style="display:none" onclick="resetProductForm()">Cancelar</button>
           </div>
 
-          <div class="form-group">
-            <label for="category">Categoria *</label>
-            <input type="text" id="category" required placeholder="Ex: Eletrônicos">
-          </div>
+          <form id="productForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="p_name">Nome *</label>
+                <input id="p_name" required />
+              </div>
+              <div class="form-group">
+                <label for="p_category">Categoria *</label>
+                <input id="p_category" required />
+              </div>
+              <div class="form-group">
+                <label for="p_price">Preço (R$) *</label>
+                <input id="p_price" type="number" step="0.01" required />
+              </div>
+              <div class="form-group">
+                <label for="p_stock">Estoque *</label>
+                <input id="p_stock" type="number" required />
+              </div>
+              <div class="form-group" style="grid-column:1 / -1;">
+                <label for="p_image">URL da Imagem</label>
+                <input id="p_image" />
+              </div>
+              <div class="form-group" style="grid-column:1 / -1;">
+                <label for="p_description">Descrição</label>
+                <textarea id="p_description"></textarea>
+              </div>
+              <div class="form-group checkbox-group">
+                <input id="p_featured" type="checkbox" />
+                <label for="p_featured">Produto em Destaque</label>
+              </div>
+            </div>
 
-          <div class="form-group">
-            <label for="price">Preço (R$) *</label>
-            <input type="number" id="price" step="0.01" required placeholder="0.00">
-          </div>
+            <button type="submit" class="btn btn-primary" style="width:100%; margin-top:1rem;">
+              <span id="productSubmitText">Adicionar Produto</span>
+            </button>
+          </form>
+        </div>
 
-          <div class="form-group">
-            <label for="stock">Estoque *</label>
-            <input type="number" id="stock" required placeholder="0">
-          </div>
+        <div>
+          <h3>Produtos Cadastrados (<span id="adminProductCount">0</span>)</h3>
+          <div id="adminProductsList" class="admin-products" style="margin-top:1rem;"></div>
+        </div>
+      </section>
 
-          <div class="form-group" style="grid-column: 1 / -1;">
-            <label for="image">URL da Imagem</label>
-            <input type="text" id="image" placeholder="https://exemplo.com/imagem.jpg">
-          </div>
+      <!-- Usuários (apenas admin) -->
+      <aside>
+        <div class="admin-form">
+          <h2>Gerenciar Usuários</h2>
+          <p style="color:var(--text-light); margin-bottom:1rem;">Edite cargos de usuários (admin apenas)</p>
 
-          <div class="form-group" style="grid-column: 1 / -1;">
-            <label for="description">Descrição</label>
-            <textarea id="description" placeholder="Descreva o produto..."></textarea>
-          </div>
-
-          <div class="form-group checkbox-group">
-            <input type="checkbox" id="featured">
-            <label for="featured">Produto em Destaque</label>
+          <div id="usersContainer">
+            <div id="usersList"></div>
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
-          <span id="submitText">Adicionar Produto</span>
-        </button>
-      </form>
+        <div style="margin-top:1rem;">
+          <h3>Ajuda rápida</h3>
+          <p style="color:var(--text-light); font-size:0.95rem;">
+            Para tornar alguém administrador/gerente escolha o papel e clique em salvar (o select salva automaticamente).
+          </p>
+        </div>
+      </aside>
     </div>
+  </main>
 
-    <!-- Lista de Produtos -->
-    <div style="margin-top: 2rem;">
-      <h2>Produtos Cadastrados (<span id="productCount">0</span>)</h2>
-      <div id="productsList" class="admin-products"></div>
-    </div>
-
-    <!-- Lista de Usuários -->
-    <div style="margin-top: 2rem;">
-      <h2>Usuários (<span id="usersCount">0</span>)</h2>
-      <div id="usersList"></div>
-    </div>
-  </div>
+  <div id="notification" class="hidden"></div>
 
   <footer>
     <div class="container">
@@ -104,143 +127,264 @@
     </div>
   </footer>
 
-  <script>
-    let editingProductId = null;
+  <script src="js/storage.js"></script>
 
-    async function updateUIForUser(user) {
-      if (user) {
-        document.getElementById('currentUserEmail').textContent = user.email + (user.role ? ' (' + user.role + ')' : '');
-      } else {
-        document.getElementById('currentUserEmail').textContent = '—';
+  <script>
+    // Notification helper
+    function notify(msg, type = "success", ttl = 3000) {
+      let el = document.getElementById('notification');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'notification';
+        document.body.appendChild(el);
       }
+      el.textContent = msg;
+      el.className = '';
+      el.classList.add(type === 'success' ? 'success' : 'error');
+      el.classList.remove('hidden');
+      setTimeout(()=> el.classList.add('hidden'), ttl);
     }
 
-    document.getElementById('logoutBtn').addEventListener('click', async () => {
-      await appAuth.handleSignOut();
-      window.location.href = 'login.html';
+    // Ensure cart badge updates (calls storage.js)
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof updateCartCount === 'function') updateCartCount();
     });
 
-    // Protege a página — somente admin
+    // Logout button in header (if present)
+    function attachLogoutFallback() {
+      const btn = document.getElementById('logoutBtn');
+      if (btn) btn.onclick = async () => {
+        await firebaseApi.signOut();
+        localStorage.removeItem('ecommerce_current_user');
+        window.location.href = 'login.html';
+      };
+    }
+
+    // Route protection and initialization
+    let editingProductId = null;
+
     document.addEventListener('DOMContentLoaded', async () => {
-      const ok = await appAuth.requireRole(['admin']);
-      if (!ok) return;
+      // Wait for firebaseApi
+      const wait = setInterval(async () => {
+        if (window.firebaseApi) {
+          clearInterval(wait);
+          // Header dynamic
+          await aplicarHeader();
+          attachLogoutFallback();
 
-      loadProducts();
-      loadUsers();
+          // Check current user & role
+          const local = JSON.parse(localStorage.getItem('ecommerce_current_user') || 'null');
+          if (!local || !local.uid) { window.location.href = 'login.html'; return; }
+          const role = await firebaseApi.getRole(local.uid);
+          if (role !== 'admin') {
+            if (role === 'gerente') { window.location.href = 'gerente.html'; return; }
+            window.location.href = 'unauthorized.html'; return;
+          }
+
+          // load data
+          refreshCurrentUserInfo();
+          loadProducts();
+          loadUsers();
+        }
+      }, 80);
     });
 
-    // ---------- Products ----------
+    // Header function reused across pages (keeps cart icon)
+    async function aplicarHeader() {
+      const nav = document.getElementById('navMenu');
+      const user = JSON.parse(localStorage.getItem('ecommerce_current_user') || 'null');
+      if (!nav) return;
+      if (!user) return;
+
+      const role = await firebaseApi.getRole(user.uid) || 'usuario';
+
+      nav.innerHTML = `
+        <a href="home.html" class="btn btn-ghost">Home</a>
+        <a href="produtos.html" class="btn btn-ghost">Produtos</a>
+        ${ role === 'admin' ? `<a href="admin.html" class="btn btn-ghost">Admin</a>` : '' }
+        ${ role === 'gerente' ? `<a href="admin.html" class="btn btn-ghost">Gerente</a>` : '' }
+
+        <a href="carrinho.html" class="btn btn-primary cart-btn" style="position:relative;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.6 13.59a2 2 0 0 0 2 1.41h9.72a2 2 0 0 0 2-1.72L23 6H6"></path>
+          </svg>
+          <span class="cart-badge" style="display:none; position:absolute; top:-6px; right:-6px; background:var(--accent); color:white; border-radius:50%; padding:2px 6px; font-size:12px;">0</span>
+        </a>
+
+        <span style="color:var(--text-light); margin-right:1rem;">${user.email} (${role})</span>
+        <button id="logoutBtn" class="btn btn-outline">Sair</button>
+      `;
+      if (typeof updateCartCount === 'function') updateCartCount();
+    }
+
+    async function refreshCurrentUserInfo() {
+      const local = JSON.parse(localStorage.getItem('ecommerce_current_user') || 'null');
+      if (!local) return;
+      const role = await firebaseApi.getRole(local.uid);
+      document.getElementById('currentUserInfo').textContent = `${local.email} ${role ? '('+role+')' : ''}`;
+    }
+
+    // ---------------- Products ----------------
     async function loadProducts() {
       const products = await firebaseApi.listProductsFirestore();
-      const container = document.getElementById('productsList');
-      const count = document.getElementById('productCount');
+      const container = document.getElementById('adminProductsList');
+      const count = document.getElementById('adminProductCount');
       count.textContent = products.length;
       if (!products.length) {
-        container.innerHTML = `<div class="empty-state"><p style="color: var(--text-light);">Nenhum produto cadastrado</p></div>`;
+        container.innerHTML = `<div class="empty-state"><p style="color:var(--text-light)">Nenhum produto cadastrado</p></div>`;
         return;
       }
+
       container.innerHTML = products.map(p => `
         <div class="admin-product-card">
           <img src="${p.image || 'https://via.placeholder.com/100'}" alt="${p.name}" class="admin-product-image">
           <div class="admin-product-content">
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <div>
-                <h3>${p.name}</h3>
-                <div style="display:flex; gap:.5rem;">
+                <h3 style="margin:0;">${p.name}</h3>
+                <div style="display:flex; gap:.5rem; margin-top:.25rem;">
                   <span class="product-category">${p.category || ''}</span>
                   ${p.featured ? '<span class="badge">Destaque</span>' : ''}
                 </div>
               </div>
               <div class="admin-product-actions">
-                <button class="btn btn-outline" onclick="editProduct('${p.id}')">Editar</button>
+                <button class="btn btn-outline" onclick="startEditProduct('${p.id}')">Editar</button>
                 <button class="btn btn-danger" onclick="deleteProduct('${p.id}')">Excluir</button>
               </div>
             </div>
-            <p style="color: var(--text-light);">${p.description || ''}</p>
-            <div style="display:flex; gap:1rem; align-items:center;">
-              <strong style="color:var(--primary);">R$ ${Number(p.price).toFixed(2)}</strong>
-              <span style="color:var(--text-light);">Estoque: ${p.stock}</span>
+            <p style="color:var(--text-light); margin-top:.5rem;">${p.description || ''}</p>
+            <div style="display:flex; gap:1rem; align-items:center; margin-top:.5rem;">
+              <strong style="color:var(--primary)">R$ ${Number(p.price).toFixed(2)}</strong>
+              <span style="color:var(--text-light)">Estoque: ${p.stock}</span>
             </div>
           </div>
         </div>
       `).join('');
     }
 
-    async function handleSubmit(e) {
+    document.getElementById('productForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const product = {
-        name: document.getElementById('name').value,
-        description: document.getElementById('description').value,
-        price: Number(document.getElementById('price').value),
-        image: document.getElementById('image').value || 'https://via.placeholder.com/500',
-        category: document.getElementById('category').value,
-        stock: Number(document.getElementById('stock').value),
-        featured: document.getElementById('featured').checked
+        name: document.getElementById('p_name').value.trim(),
+        description: document.getElementById('p_description').value.trim(),
+        price: Number(document.getElementById('p_price').value),
+        image: document.getElementById('p_image').value || 'https://via.placeholder.com/500',
+        category: document.getElementById('p_category').value.trim(),
+        stock: Number(document.getElementById('p_stock').value),
+        featured: document.getElementById('p_featured').checked
       };
 
-      if (editingProductId) {
-        await firebaseApi.updateProductFirestore(editingProductId, product);
-        showNotification('Produto atualizado com sucesso!', 'success');
-      } else {
-        await firebaseApi.addProductFirestore(product);
-        showNotification('Produto adicionado com sucesso!', 'success');
+      try {
+        if (editingProductId) {
+          await firebaseApi.updateProductFirestore(editingProductId, product);
+          notify('Produto atualizado com sucesso!', 'success');
+        } else {
+          await firebaseApi.addProductFirestore(product);
+          notify('Produto adicionado com sucesso!', 'success');
+        }
+        resetProductForm();
+        loadProducts();
+      } catch (err) {
+        console.error(err);
+        notify('Erro ao salvar produto: ' + (err.message || err), 'error');
       }
+    });
 
-      resetForm();
-      loadProducts();
-    }
-
-    function resetForm() {
+    function resetProductForm() {
       editingProductId = null;
       document.getElementById('productForm').reset();
-      document.getElementById('formTitle').textContent = 'Adicionar Novo Produto';
-      document.getElementById('submitText').textContent = 'Adicionar Produto';
-      document.getElementById('cancelBtn').style.display = 'none';
+      document.getElementById('productFormTitle').textContent = 'Adicionar Produto';
+      document.getElementById('productSubmitText').textContent = 'Adicionar Produto';
+      document.getElementById('cancelProductBtn').style.display = 'none';
     }
 
-    async function editProduct(id) {
+    async function startEditProduct(id) {
       const p = await firebaseApi.getProductByIdFirestore(id);
       if (!p) return;
       editingProductId = id;
-      document.getElementById('name').value = p.name;
-      document.getElementById('description').value = p.description || '';
-      document.getElementById('price').value = p.price;
-      document.getElementById('image').value = p.image || '';
-      document.getElementById('category').value = p.category || '';
-      document.getElementById('stock').value = p.stock || 0;
-      document.getElementById('featured').checked = !!p.featured;
+      document.getElementById('p_name').value = p.name || '';
+      document.getElementById('p_category').value = p.category || '';
+      document.getElementById('p_price').value = p.price || 0;
+      document.getElementById('p_stock').value = p.stock || 0;
+      document.getElementById('p_image').value = p.image || '';
+      document.getElementById('p_description').value = p.description || '';
+      document.getElementById('p_featured').checked = !!p.featured;
 
-      document.getElementById('formTitle').textContent = 'Editar Produto';
-      document.getElementById('submitText').textContent = 'Atualizar Produto';
-      document.getElementById('cancelBtn').style.display = 'inline-block';
+      document.getElementById('productFormTitle').textContent = 'Editar Produto';
+      document.getElementById('productSubmitText').textContent = 'Atualizar Produto';
+      document.getElementById('cancelProductBtn').style.display = 'inline-block';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     async function deleteProduct(id) {
       if (!confirm('Tem certeza que deseja excluir este produto?')) return;
       await firebaseApi.deleteProductFirestore(id);
-      showNotification('Produto excluído', 'success');
+      notify('Produto excluído', 'success');
       loadProducts();
     }
 
-    // ---------- Users (profiles) ----------
+    // ---------------- Users ----------------
     async function loadUsers() {
       const users = await firebaseApi.listUserProfiles();
-      const usersList = document.getElementById('usersList');
-      const count = document.getElementById('usersCount');
-      count.textContent = users.length;
+      const container = document.getElementById('usersList');
       if (!users.length) {
-        usersList.innerHTML = `<div class="empty-state"><p style="color: var(--text-light);">Nenhum usuário encontrado</p></div>`;
+        container.innerHTML = `<div class="empty-state"><p style="color:var(--text-light)">Nenhum usuário encontrado</p></div>`;
         return;
       }
 
-      usersList.innerHTML = users.map(u => `
-        <div class="admin-product-card" style="align-items: center;">
+      container.innerHTML = users.map(u => `
+        <div class="admin-product-card" style="align-items:center;">
           <div style="flex:1;">
-            <h3 style="margin-bottom:.25rem;">${u.displayName || '(sem nome)'}</h3>
-            <p style="color:var(--text-light); margin-bottom:.25rem;">${u.email || ''}</p>
-            <div style="display:flex; gap:.5rem; align-items:center;">
-              <label style="font-size:0.875rem;">Papel:</label>
-              <select data-uid="${u.id}" onchange="changeUserRole(event)">
+            <h3 style="margin:0;">${u.displayName || '(sem nome)'}</h3>
+            <p style="color:var(--text-light); margin:4px 0;">${u.email || ''}</p>
+            <div style="display:flex; gap:0.5rem; align-items:center;">
+              <label style="font-size:0.9rem; color:var(--text-light); margin-right:0.5rem;">Papel:</label>
+              <select data-uid="${u.id}" style="padding:.5rem; border-radius:8px;">
                 <option value="">— sem papel —</option>
                 <option value="gerente">gerente</option>
+                <option value="admin">admin</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <button class="btn btn-outline" onclick="editUser('${u.id}')">Editar perfil</button>
+          </div>
+        </div>
+      `).join('');
+
+      for (const u of users) {
+        const role = await firebaseApi.getRole(u.id);
+        const sel = document.querySelector(`select[data-uid="${u.id}"]`);
+        if (sel) sel.value = role || '';
+        if (sel) {
+          sel.onchange = async (e) => {
+            const newRole = e.target.value;
+            if (newRole) {
+              await firebaseApi.setRole(u.id, newRole);
+              notify('Papel atualizado: ' + newRole, 'success');
+            } else {
+              await firebaseApi.db.collection('roles').doc(u.id).delete();
+              notify('Papel removido', 'success');
+            }
+            loadUsers();
+          };
+        }
+      }
+    }
+
+    async function editUser(uid) {
+      const profile = await firebaseApi.getUserProfile(uid);
+      if (!profile) return;
+      const newName = prompt('Nome do usuário:', profile.displayName || '');
+      const newEmail = prompt('E-mail do usuário (apenas profile):', profile.email || '');
+      if (newName === null) return;
+      await firebaseApi.updateUserProfile(uid, { displayName: newName, email: newEmail });
+      notify('Perfil atualizado', 'success');
+      loadUsers();
+    }
+  </script>
+</body>
+</html>

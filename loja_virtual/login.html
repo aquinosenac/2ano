@@ -1,75 +1,69 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login - TechTrust</title>
-  <meta name="description" content="Faça login na TechTrust para acessar sua conta">
   <link rel="stylesheet" href="css/style.css">
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <!-- Firebase (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-<script src="firebase.js"></script>
-<script src="auth.js"></script>
-
-  
+  <script src="firebase.js"></script>
+  <script src="auth.js"></script>
 </head>
 <body>
   <header>
-    <div class="container">
-      <div class="header-content">
-        <a href="home.html" class="logo">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <div class="container header-content">
+      <a href="home.html" class="logo">TechTrust</a>
+      <nav id="navMenu">
+        <a href="home.html" class="btn btn-ghost">Home</a>
+        <a href="produtos.html" class="btn btn-ghost">Produtos</a>
+        <a href="cadastro.html" class="btn btn-primary">Criar Conta</a>
+        <a href="carrinho.html" class="btn btn-primary cart-btn" style="position:relative;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="9" cy="21" r="1"></circle>
             <circle cx="20" cy="21" r="1"></circle>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            <path d="M1 1h4l2.6 13.59a2 2 0 0 0 2 1.41h9.72a2 2 0 0 0 2-1.72L23 6H6"></path>
           </svg>
-          TechTrust
+          <span class="cart-badge" style="display:none; position:absolute; top:-6px; right:-6px; background:var(--accent); color:white; border-radius:50%; padding:2px 6px; font-size:12px;">0</span>
         </a>
-        <nav>
-          <a href="home.html" class="btn btn-ghost">Início</a>
-          <a href="produtos.html" class="btn btn-ghost">Produtos</a>
-          <a href="cadastro.html" class="btn btn-primary">Criar Conta</a>
-        </nav>
-      </div>
+      </nav>
     </div>
   </header>
 
-  <main>
-    <section class="section">
-      <div class="container">
-        <div style="max-width: 500px; margin: 0 auto;">
-          <div class="admin-form">
-            <h1 class="text-center mb-3">Entrar na sua conta</h1>
-            <p class="text-center mb-4" style="color: var(--text-light);">Acesse sua conta para continuar comprando</p>
-            
-            <form id="loginForm">
-              <div class="form-group">
-                <label for="email">E-mail</label>
-                <input type="email" id="email" name="email" required placeholder="seu@email.com">
-              </div>
+  <main class="section">
+    <div class="container" style="max-width:600px; margin:0 auto;">
+      <div class="admin-form">
+        <h1 class="text-center mb-3">Entrar na sua conta</h1>
+        <p class="text-center mb-4" style="color:var(--text-light);">Acesse sua conta para continuar</p>
 
-              <div class="form-group">
-                <label for="password">Senha</label>
-                <input type="password" id="password" name="password" required placeholder="••••••••" minlength="6">
-              </div>
-
-              <div id="errorMessage" class="hidden" style="background: #ffebee; color: var(--danger); padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.875rem;"></div>
-
-              <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">Entrar</button>
-
-              <p class="text-center" style="color: var(--text-light);">
-                Não tem uma conta? 
-                <a href="cadastro.html" style="color: var(--primary); text-decoration: none; font-weight: 500;">Criar conta</a>
-              </p>
-            </form>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input id="email" type="email" required placeholder="seu@email.com" />
           </div>
-        </div>
+          <div class="form-group">
+            <label for="password">Senha</label>
+            <input id="password" type="password" required minlength="6" />
+          </div>
+
+          <div id="errorBox" class="hidden" style="margin-bottom:1rem; color:var(--danger); background:#ffebee; padding:.75rem; border-radius:8px;"></div>
+
+          <button class="btn btn-primary" type="submit" style="width:100%;">Entrar</button>
+        </form>
+
+        <p class="text-center mt-2" style="color:var(--text-light);">
+          Não tem conta? <a href="cadastro.html" style="color:var(--primary); font-weight:600;">Criar conta</a>
+        </p>
       </div>
-    </section>
+    </div>
   </main>
+
+  <div id="notification" class="hidden"></div>
 
   <footer>
     <div class="container">
@@ -77,44 +71,92 @@
     </div>
   </footer>
 
-  <div id="notification" class="hidden"></div>
+  <script src="js/storage.js"></script>
 
   <script>
-    const loginForm = document.getElementById('loginForm');
-    const errorMessage = document.getElementById('errorMessage');
-
-    // Se já está logado, manda para home
-    const user = appAuth.getCurrentUser();
-    if (user) {
-      window.location.href = "home.html";
+    function notify(msg, type = 'success', ttl = 3000) {
+      let el = document.getElementById('notification');
+      if (!el) {
+        el = document.createElement('div'); el.id = 'notification'; document.body.appendChild(el);
+      }
+      el.textContent = msg;
+      el.className = ''; el.classList.add(type === 'success' ? 'success' : 'error'); el.classList.remove('hidden');
+      setTimeout(()=> el.classList.add('hidden'), ttl);
     }
 
-    loginForm.addEventListener('submit', async (e) => {
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      errorMessage.classList.add('hidden');
+      document.getElementById('errorBox').classList.add('hidden');
 
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
-      const result = await appAuth.handleSignIn(email, password);
+      try {
+        const cred = await firebaseApi.signInWithEmail(email, password);
+        const role = await firebaseApi.getRole(cred.user.uid);
 
-      if (result.ok) {
-        const u = appAuth.getCurrentUser();
+        // salva local
+        localStorage.setItem('ecommerce_current_user', JSON.stringify({
+          uid: cred.user.uid,
+          email: cred.user.email,
+          role: role || null
+        }));
 
-        // REDIRECIONA CONFORME O PAPEL
-        if (u.role === "admin") {
-          window.location.href = "admin.html";
-        } else if (u.role === "gerente") {
-          window.location.href = "gerente.html";
-        } else {
-          window.location.href = "home.html";
-        }
-      } else {
-        errorMessage.textContent = result.error || "Erro ao fazer login.";
-        errorMessage.classList.remove("hidden");
+        notify('Login realizado com sucesso!', 'success');
+
+        setTimeout(() => {
+          if (role === 'admin') window.location.href = 'admin.html';
+          else if (role === 'gerente') window.location.href = 'gerente.html';
+          else window.location.href = 'home.html';
+        }, 700);
+      } catch (err) {
+        console.error(err);
+        document.getElementById('errorBox').textContent = err.message || 'Erro ao efetuar login';
+        document.getElementById('errorBox').classList.remove('hidden');
+        notify('Erro ao entrar: ' + (err.message || ''), 'error');
       }
     });
-  </script>
 
+    // apply header if already logged
+    document.addEventListener('DOMContentLoaded', async () => {
+      const wait = setInterval(() => {
+        if (window.firebaseApi) {
+          clearInterval(wait);
+          // try to apply header (if user logged)
+          const user = JSON.parse(localStorage.getItem('ecommerce_current_user') || 'null');
+          if (user) {
+            // reuse header builder from other pages (light version)
+            (async function build() {
+              const nav = document.getElementById('navMenu');
+              const role = await firebaseApi.getRole(user.uid);
+              nav.innerHTML = `
+                <a href="home.html" class="btn btn-ghost">Home</a>
+                <a href="produtos.html" class="btn btn-ghost">Produtos</a>
+                ${ role === 'admin' ? `<a href="admin.html" class="btn btn-ghost">Admin</a>` : '' }
+                ${ role === 'gerente' ? `<a href="admin.html" class="btn btn-ghost">Gerente</a>` : '' }
+                <a href="carrinho.html" class="btn btn-primary cart-btn" style="position:relative;">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.6 13.59a2 2 0 0 0 2 1.41h9.72a2 2 0 0 0 2-1.72L23 6H6"></path>
+                  </svg>
+                  <span class="cart-badge" style="display:none; position:absolute; top:-6px; right:-6px; background:var(--accent); color:white; border-radius:50%; padding:2px 6px; font-size:12px;">0</span>
+                </a>
+                <span style="color:var(--text-light); margin-right:1rem;">${user.email} (${role})</span>
+                <button id="logoutBtn" class="btn btn-outline">Sair</button>
+              `;
+              document.getElementById('logoutBtn').onclick = async () => {
+                await firebaseApi.signOut();
+                localStorage.removeItem('ecommerce_current_user');
+                window.location.href = 'login.html';
+              };
+              if (typeof updateCartCount === 'function') updateCartCount();
+            })();
+          }
+        }
+      }, 80);
+    });
+  </script>
 </body>
 </html>
