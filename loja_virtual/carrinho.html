@@ -93,7 +93,8 @@
           <div class="cart-items" id="cartItems">
             ${cart.map(item => `
               <div class="cart-item">
-                <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+  <img src="${item.image}" class="cart-item-image">
+
                 <div class="cart-item-content">
                   <h3 class="cart-item-title">${item.name}</h3>
                   <p style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 0.5rem;">${item.description}</p>

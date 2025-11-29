@@ -465,16 +465,20 @@ nav {
   box-shadow: var(--shadow-hover);
   transform: translateX(5px);
 }
-}
+
 
 .cart-item-image {
-  width: 100px;
-  height: 100px;
+  width: 140px;
+  height: 140px;
   object-fit: cover;
   border-radius: 12px;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
+
+
+
+
 
 .cart-item-content {
   flex: 1;
